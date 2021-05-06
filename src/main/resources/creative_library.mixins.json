@@ -3,11 +3,12 @@
   "minVersion": "0.8",
   "package": "com.minenash.creative_library.mixin",
   "compatibilityLevel": "JAVA_8",
-  "mixins": [
-  ],
   "client": [
-    "CreativeInventoryScreenMixin"
+    "CreativeInventoryScreenMixin",
+    "CreativeInventoryScreenMixin_dev",
+    "CreativeInventoryScreenMixin_prod"
   ],
+  "plugin": "com.minenash.creative_library.mixin.CreativeInventoryScreenMixinPlugin",
   "injectors": {
     "defaultRequire": 1
   }

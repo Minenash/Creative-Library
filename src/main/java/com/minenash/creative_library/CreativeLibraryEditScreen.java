@@ -303,10 +303,10 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
         }
 
         private void ensureThreeExtraRows() {
-            while (itemList.subList(itemList.size()-36, itemList.size()).equals(FOUR_EMPTY_ROWS))
-                itemList = itemList.subList(0, itemList.size() - 9);
+//            while (itemList.subList(itemList.size()-36, itemList.size()).equals(FOUR_EMPTY_ROWS))
+//                itemList = itemList.subList(0, itemList.size() - 9);
 
-            while (!itemList.subList(itemList.size()-27,itemList.size()).equals(THREE_EMPTY_ROWS))
+            while (!itemList.subList(itemList.size()-27, itemList.size()).equals(THREE_EMPTY_ROWS))
                 itemList.addAll(ONE_EMPTY_ROW);
         }
 
