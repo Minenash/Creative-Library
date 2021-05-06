@@ -5,10 +5,8 @@ import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.datafixers.util.Pair;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.MinecraftClient;
@@ -33,6 +31,7 @@ import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerListener;
 import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
@@ -53,8 +52,6 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
     private boolean scrolling;
     private CreativeInventoryListener listener;
     private boolean lastClickOutsideBounds;
-    @Nullable
-    private List<Slot> slots;
 
     public CreativeLibraryEditScreen(PlayerEntity player) {
         super(new CreativeLibraryEditScreen.CreativeScreenHandler(player), player.inventory, LiteralText.EMPTY);
@@ -64,131 +61,14 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
         this.backgroundWidth = 195;
     }
 
-    public void tick() {
-        if (!this.client.interactionManager.hasCreativeInventory())
-            this.client.openScreen(new InventoryScreen(this.client.player));
-
-    }
-
-    protected void onMouseClick(@Nullable Slot slot, int invSlot, int clickData, SlotActionType actionType) {
-        super.onMouseClick(slot, invSlot, clickData, actionType);
-//        boolean bl = actionType == SlotActionType.QUICK_MOVE;
-//        actionType = invSlot == -999 && actionType == SlotActionType.PICKUP ? SlotActionType.THROW : actionType;
-//        ItemStack itemStack3;
-//        PlayerInventory playerInventory;
-//        if (slot == null && actionType != SlotActionType.QUICK_CRAFT) {
-//            playerInventory = this.client.player.inventory;
-//            if (!playerInventory.getCursorStack().isEmpty() && this.lastClickOutsideBounds) {
-//                if (clickData == 0) {
-//                    this.client.player.dropItem(playerInventory.getCursorStack(), true);
-//                    this.client.interactionManager.dropCreativeStack(playerInventory.getCursorStack());
-//                    playerInventory.setCursorStack(ItemStack.EMPTY);
-//                }
-//
-//                if (clickData == 1) {
-//                    itemStack3 = playerInventory.getCursorStack().split(1);
-//                    this.client.player.dropItem(itemStack3, true);
-//                    this.client.interactionManager.dropCreativeStack(itemStack3);
-//                }
-//            }
-//        } else {
-//            if (slot != null && !slot.canTakeItems(this.client.player))
-//                return;
-//            ItemStack itemStack8;
-//            ItemStack itemStack10;
-//            if (actionType != SlotActionType.QUICK_CRAFT && slot.inventory == INVENTORY) {
-//                playerInventory = this.client.player.inventory;
-//                itemStack3 = playerInventory.getCursorStack();
-//                ItemStack itemStack4 = slot.getStack();
-//                if (actionType == SlotActionType.SWAP) {
-//                    if (!itemStack4.isEmpty()) {
-//                        itemStack10 = itemStack4.copy();
-//                        itemStack10.setCount(itemStack10.getMaxCount());
-//                        this.client.player.inventory.setStack(clickData, itemStack10);
-//                        this.client.player.playerScreenHandler.sendContentUpdates();
-//                    }
-//
-//                    return;
-//                }
-//
-//                if (actionType == SlotActionType.CLONE) {
-//                    if (playerInventory.getCursorStack().isEmpty() && slot.hasStack()) {
-//                        itemStack10 = slot.getStack().copy();
-//                        itemStack10.setCount(itemStack10.getMaxCount());
-//                        playerInventory.setCursorStack(itemStack10);
-//                    }
-//
-//                    return;
-//                }
-//
-//                if (actionType == SlotActionType.THROW) {
-//                    if (!itemStack4.isEmpty()) {
-//                        itemStack10 = itemStack4.copy();
-//                        itemStack10.setCount(clickData == 0 ? 1 : itemStack10.getMaxCount());
-//                        this.client.player.dropItem(itemStack10, true);
-//                        this.client.interactionManager.dropCreativeStack(itemStack10);
-//                    }
-//
-//                    return;
-//                }
-//
-//                if (!itemStack3.isEmpty() && !itemStack4.isEmpty() && itemStack3.isItemEqualIgnoreDamage(itemStack4) && ItemStack.areTagsEqual(itemStack3, itemStack4)) {
-//                    if (clickData == 0) {
-//                        if (bl) {
-//                            itemStack3.setCount(itemStack3.getMaxCount());
-//                        } else if (itemStack3.getCount() < itemStack3.getMaxCount()) {
-//                            itemStack3.increment(1);
-//                        }
-//                    } else {
-//                        itemStack3.decrement(1);
-//                    }
-//                } else if (!itemStack4.isEmpty() && itemStack3.isEmpty()) {
-//                    playerInventory.setCursorStack(itemStack4.copy());
-//                    itemStack3 = playerInventory.getCursorStack();
-//                    if (bl) {
-//                        itemStack3.setCount(itemStack3.getMaxCount());
-//                    }
-//                } else if (clickData == 0) {
-//                    playerInventory.setCursorStack(ItemStack.EMPTY);
-//                } else {
-//                    playerInventory.getCursorStack().decrement(1);
-//                }
-//            } else if (this.handler != null) {
-//                itemStack8 = slot == null ? ItemStack.EMPTY : this.handler.getSlot(slot.id).getStack();
-//                this.handler.onSlotClick(slot == null ? invSlot : slot.id, clickData, actionType, this.client.player);
-//                if (ScreenHandler.unpackQuickCraftStage(clickData) == 2) {
-//                    for(int j = 0; j < 9; ++j) {
-//                        this.client.interactionManager.clickCreativeStack(this.handler.getSlot(45 + j).getStack(), 36 + j);
-//                    }
-//                } else if (slot != null) {
-//                    itemStack3 = this.handler.getSlot(slot.id).getStack();
-//                    this.client.interactionManager.clickCreativeStack(itemStack3, slot.id - this.handler.slots.size() + 9 + 36);
-//                    int k = 45 + clickData;
-//                    if (actionType == SlotActionType.SWAP) {
-//                        this.client.interactionManager.clickCreativeStack(itemStack8, k - this.handler.slots.size() + 9 + 36);
-//                    } else if (actionType == SlotActionType.THROW && !itemStack8.isEmpty()) {
-//                        itemStack10 = itemStack8.copy();
-//                        itemStack10.setCount(clickData == 0 ? 1 : itemStack10.getMaxCount());
-//                        this.client.player.dropItem(itemStack10, true);
-//                        this.client.interactionManager.dropCreativeStack(itemStack10);
-//                    }
-//
-//                    this.client.player.playerScreenHandler.sendContentUpdates();
-//                }
-//            }
-//        }
-
-    }
-
     protected void init() {
         if (this.client.interactionManager.hasCreativeInventory()) {
             super.init();
             this.client.player.playerScreenHandler.removeListener(this.listener);
             this.listener = new CreativeInventoryListener(this.client);
             this.client.player.playerScreenHandler.addListener(this.listener);
-        } else {
+        } else
             this.client.openScreen(new InventoryScreen(this.client.player));
-        }
 
     }
 
@@ -196,6 +76,88 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
         super.removed();
         if (this.client.player != null && this.client.player.inventory != null)
             this.client.player.playerScreenHandler.removeListener(this.listener);
+    }
+
+    public void tick() {
+        if (!this.client.interactionManager.hasCreativeInventory())
+            this.client.openScreen(new InventoryScreen(this.client.player));
+    }
+
+    // Ignores SlotActionType.PICKUP_ALL, doesn't do right-click on stacks, doesn't do drag correctly
+    private boolean cursorItemIsAFAAAAAKE = false;
+    protected void onMouseClick(@Nullable Slot slot, int invSlot, int clickData, SlotActionType actionType) {
+
+        if (slot == null) {
+            System.out.println("Slot is null");
+            if (cursorItemIsAFAAAAAKE || actionType == SlotActionType.QUICK_CRAFT)
+                return;
+            dropItems(playerInventory.getCursorStack(), clickData == 0);
+            return;
+        }
+
+        boolean isLibrarySlot = slot.inventory == handler.inventory;
+        ItemStack cursorStack = playerInventory.getCursorStack();
+        ItemStack slotStack = slot.getStack();
+
+        System.out.println("Action: " + actionType + " | click:" + clickData);
+
+        if (actionType == SlotActionType.THROW && !cursorItemIsAFAAAAAKE) {
+            dropItems(slot.getStack(), clickData == 1);
+        }
+
+        else if (actionType == SlotActionType.SWAP && !isLibrarySlot) {
+            ItemStack stack = playerInventory.getStack(clickData);
+            playerInventory.setStack(clickData, slotStack);
+            slot.setStack(stack);
+        }
+
+        else if (actionType == SlotActionType.PICKUP || actionType == SlotActionType.QUICK_CRAFT) {
+
+//            if (clickData == 1 && !isLibrarySlot && !cursorItemIsAFAAAAAKE) {
+//                if (!cursorStack.isEmpty() && !slotStack.isEmpty()) {
+//                    slot.setStack(cursorStack);
+//                    playerInventory.setCursorStack(slotStack);
+//                }
+//                else if (!cursorStack.isEmpty()) {
+//                    float half = slotStack.getCount() / 2F;
+//                    playerInventory.setCursorStack(slotStack);
+//                    playerInventory.getCursorStack().setCount((int)Math.ceil(half));
+//                    slotStack.setCount((int)half);
+//                }
+//                else if (!slotStack.isEmpty()) {
+//                    slot.setStack(cursorStack);
+//                    slot.getStack().setCount(1);
+//                    playerInventory.getCursorStack().decrement(1);
+//
+//                }
+//            }
+
+            if ((isLibrarySlot == cursorItemIsAFAAAAAKE) || cursorStack.isEmpty()) {
+                slot.setStack(cursorStack);
+                playerInventory.setCursorStack(slotStack);
+                cursorItemIsAFAAAAAKE = !playerInventory.getCursorStack().isEmpty() && isLibrarySlot;
+            }
+            else if (isLibrarySlot)
+                slot.setStack(cursorStack);
+            else
+                playerInventory.setCursorStack(ItemStack.EMPTY);
+        }
+
+        else if (actionType == SlotActionType.CLONE) {
+            playerInventory.setCursorStack(slotStack);
+            cursorItemIsAFAAAAAKE = isLibrarySlot;
+        }
+
+        else if (actionType == SlotActionType.QUICK_MOVE) {
+            if (isLibrarySlot)
+                slot.setStack(ItemStack.EMPTY);
+            else
+                handler.addStack(slotStack, scrollPosition);
+        }
+
+        if (isLibrarySlot)
+            handler.setSlot(slot, invSlot, scrollPosition);
+
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -215,9 +177,39 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         int i = (this.handler.itemList.size() + 9 - 1) / 9 - 5;
         this.scrollPosition = (float)((double)this.scrollPosition - amount / (double)i);
-        this.scrollPosition = MathHelper.clamp(this.scrollPosition, 0.0F, 0.96F);
+        this.scrollPosition = MathHelper.clamp(this.scrollPosition, 0.0F, 1F);
         this.handler.scrollItems(this.scrollPosition);
         return true;
+    }
+
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        if (this.scrolling) {
+            float i = this.y + 18;
+            float j = i + 108;
+            this.scrollPosition = (float)(mouseY - i - 7.5F) / ((j - i) - 15.0F);
+            this.scrollPosition = MathHelper.clamp(this.scrollPosition, 0.0F, 1F);
+            this.handler.scrollItems(this.scrollPosition);
+            return true;
+        } else {
+            return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        }
+    }
+
+    private void dropItems(ItemStack original, boolean all) {
+        if (!original.isEmpty()) {
+            if (all) {
+                this.client.player.dropItem(original, true);
+                this.client.interactionManager.dropCreativeStack(original);
+                original.setCount(0);
+            }
+            else {
+                ItemStack thrown = original.copy();
+                thrown.setCount(1);
+                original.decrement(1);
+                this.client.player.dropItem(thrown, true);
+                this.client.interactionManager.dropCreativeStack(thrown);
+            }
+        }
     }
 
     protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
@@ -226,20 +218,7 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
     }
 
     protected boolean isClickInScrollbar(double mouseX, double mouseY) {
-        return mouseX >= x + 175 && mouseY >= y + 18 && mouseX < x + 175 + 14 && mouseY < y + 18 + 112;
-    }
-
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        if (this.scrolling) {
-            float i = this.y + 18;
-            float j = i + 112;
-            this.scrollPosition = (float)(mouseY - i - 7.5F) / ((j - i) - 15.0F);
-            this.scrollPosition = MathHelper.clamp(this.scrollPosition, 0.0F, 0.96F);
-            this.handler.scrollItems(this.scrollPosition);
-            return true;
-        } else {
-            return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
-        }
+        return mouseX >= x + 175 && mouseY >= y + 18 && mouseX < x + 175 + 14 && mouseY < y + 18 + 108;
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -264,21 +243,30 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
 
         int i = this.x + 175;
         int j = this.y + 18;
-        int k = j + 112;
+        int k = j + 108;
         this.client.getTextureManager().bindTexture(SCROLL_TEXTURE);
         this.drawTexture(matrices, i, j + (int)((float)(k - j - 17) * this.scrollPosition), 232, 0, 12, 15);
     }
 
     @Environment(EnvType.CLIENT)
     public static class CreativeScreenHandler extends ScreenHandler {
-        public final List<ItemStack> itemList = CreativeLibraryStorage.getLibrary().subList(0,9*6);
-        private final Inventory inventory;
+        private static final List<ItemStack> THREE_EMPTY_ROWS = Collections.nCopies(21, ItemStack.EMPTY);
+        private static final List<ItemStack> ONE_EMPTY_ROW  = Collections.nCopies(9,  ItemStack.EMPTY);
+        public final List<ItemStack> itemList;
+        public final Inventory inventory;
 
         public CreativeScreenHandler(PlayerEntity playerEntity) {
             super(null, 987456);
             PlayerInventory playerInv = playerEntity.inventory;
             inventory = new SimpleInventory(54);
             inventory.onOpen(playerEntity);
+
+            itemList = new ArrayList<>(CreativeLibraryStorage.getLibrary());
+            itemList.addAll(Collections.nCopies(9 - (itemList.size() % 9), ItemStack.EMPTY));
+            itemList.addAll(THREE_EMPTY_ROWS);
+
+            while (itemList.size() < 54)
+                itemList.addAll(ONE_EMPTY_ROW);
 
             addSlots(inventory, 0,  18, 6);
             addSlots(playerInv, 9, 140, 3);
@@ -299,11 +287,7 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
         }
 
         public void scrollItems(float position) {
-            int i = (this.itemList.size() + 9 - 1) / 9 - 5;
-            int j = (int)((double)(position * (float)i) + 0.5D);
-            if (j < 0)
-                j = 0;
-
+            int j = getRow(position);
             for (int k = 0; k < 6; ++k) {
                 for (int l = 0; l < 9; ++l) {
                     int m = l + (k + j) * 9;
@@ -313,38 +297,51 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
 
         }
 
+        private int getRow(float position) {
+            return Math.max(0, (int)((position * (this.itemList.size() / 9F - 6)) + 0.5D));
+        }
+
+        public void setSlot(Slot slot, int slotID, float position) {
+            itemList.set(getRow(position)*9 + slotID, slot.getStack());
+
+            while (!itemList.subList(itemList.size()-21,itemList.size()).equals(THREE_EMPTY_ROWS))
+                itemList.addAll(ONE_EMPTY_ROW);
+
+            System.out.println("Set slot [" + (getRow(position)*9 + slotID) + "] to [" + slot.getStack().getName().getString() + "]");
+        }
+
+        public void addStack(ItemStack stack, float position) {
+            int index = itemList.size() - 1;
+            while (itemList.get(index).isEmpty())
+                index--;
+            itemList.set(++index, stack);
+
+            while (!itemList.subList(itemList.size()-21,itemList.size()).equals(THREE_EMPTY_ROWS))
+                itemList.addAll(ONE_EMPTY_ROW);
+
+            System.out.println("Set slot [" + index + "] to [" + stack.getName().getString() + "]");
+
+            scrollItems(position);
+        }
+
         public boolean canUse(PlayerEntity player) {
             return this.inventory.canPlayerUse(player);
         }
 
-        public ItemStack transferSlot(PlayerEntity player, int index) {
-            ItemStack itemStack = ItemStack.EMPTY;
-            Slot slot = this.slots.get(index);
-            if (slot != null && slot.hasStack()) {
-                ItemStack itemStack2 = slot.getStack();
-                itemStack = itemStack2.copy();
-                if (index < this.inventory.size()) {
-                    if (!this.insertItem(itemStack2, this.inventory.size(), this.slots.size(), true)) {
-                        return ItemStack.EMPTY;
-                    }
-                } else if (!this.insertItem(itemStack2, 0, this.inventory.size(), false)) {
-                    return ItemStack.EMPTY;
-                }
-
-                if (itemStack2.isEmpty()) {
-                    slot.setStack(ItemStack.EMPTY);
-                } else {
-                    slot.markDirty();
-                }
-            }
-
-            return itemStack;
-        }
-
         public void close(PlayerEntity player) {
             super.close(player);
+            System.out.println("Saved");
+
+            while (itemList.size() > 0 && itemList.get(itemList.size()-1).isEmpty())
+                itemList.remove(itemList.size()-1);
+
+            CreativeLibraryStorage.setLibrary(itemList);
+            CreativeLibraryStorage.save();
             this.inventory.onClose(player);
         }
 
     }
+
+
+
 }

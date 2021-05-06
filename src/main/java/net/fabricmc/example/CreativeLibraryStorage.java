@@ -24,7 +24,7 @@ import org.apache.logging.log4j.Logger;
 public class CreativeLibraryStorage {
     private static final Logger LOGGER = LogManager.getLogger();
     private static final File file =  new File(MinecraftClient.getInstance().runDirectory, "creative_library.nbt");
-    private static final List<ItemStack> items = new ArrayList<>();
+    private static List<ItemStack> items = new ArrayList<>();
     private static boolean loaded;
 
     private static void load() {
@@ -71,6 +71,10 @@ public class CreativeLibraryStorage {
             loaded = true;
         }
         return items;
+    }
+
+    public static void setLibrary(List<ItemStack> items) {
+        CreativeLibraryStorage.items = items;
     }
 }
 

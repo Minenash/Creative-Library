@@ -10,7 +10,7 @@ import org.lwjgl.glfw.GLFW;
 public class CreativeLibrary implements ClientModInitializer {
 
 	public static final KeyBinding OPEN_SCREEN = KeyBindingHelper.registerKeyBinding(new KeyBinding(
-			"seamless_loading_screen.keybind.config",
+			"creative_library.keybind.open_edit_screen",
 			InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_G,
 			"key.categories.misc"));
 
@@ -22,4 +22,5 @@ public class CreativeLibrary implements ClientModInitializer {
 				client.openScreen(new CreativeLibraryEditScreen(client.player));
 		});
 	}
+
 }
