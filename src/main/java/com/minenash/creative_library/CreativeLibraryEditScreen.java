@@ -1,4 +1,4 @@
-package net.fabricmc.example;
+package com.minenash.creative_library;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 @Environment(EnvType.CLIENT)
 public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeLibraryEditScreen.CreativeScreenHandler> {
     private static final Identifier SCROLL_TEXTURE = new Identifier("textures/gui/container/creative_inventory/tabs.png");
-    private static final Identifier INV_TEXTURE = new Identifier("modid","textures/creative_library_edit.png");
+    private static final Identifier INV_TEXTURE = new Identifier("creative_library","textures/creative_library_edit.png");
     public static float scrollPosition = 0;
     private boolean scrolling;
     private CreativeInventoryListener listener;

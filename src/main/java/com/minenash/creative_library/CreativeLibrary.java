@@ -1,4 +1,4 @@
-package net.fabricmc.example;
+package com.minenash.creative_library;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;

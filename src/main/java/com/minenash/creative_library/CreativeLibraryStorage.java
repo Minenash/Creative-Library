@@ -1,16 +1,13 @@
-package net.fabricmc.example;
+package com.minenash.creative_library;
 
-import com.mojang.datafixers.DataFixer;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.options.HotbarStorageEntry;
 import net.minecraft.datafixer.DataFixTypes;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;

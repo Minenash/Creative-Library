@@ -1,37 +1,35 @@
 {
   "schemaVersion": 1,
-  "id": "modid",
+  "id": "creative_library",
   "version": "${version}",
 
-  "name": "Example Mod",
-  "description": "This is an example description! Tell everyone what your mod is about!",
+  "name": "Creative Library",
+  "description": "Adds Library tabs to the creative inventory",
   "authors": [
-    "Me!"
+    "Minenash"
   ],
   "contact": {
-    "homepage": "https://fabricmc.net/",
-    "sources": "https://github.com/FabricMC/fabric-example-mod"
+    "homepage": "https://github.com/Minenash/Creative-Library",
+    "sources": "https://github.com/Minenash/Creative-Library",
+    "issues": "https://github.com/Minenash/Creative-Library/issues"
   },
 
-  "license": "CC0-1.0",
-  "icon": "assets/modid/icon.png",
+  "license": "MIT",
+  "icon": "assets/creative_library/icon.png",
 
   "environment": "*",
   "entrypoints": {
     "client": [
-      "net.fabricmc.example.CreativeLibrary"
+      "com.minenash.creative_library.CreativeLibrary"
     ]
   },
   "mixins": [
-    "modid.mixins.json"
+    "creative_library.mixins.json"
   ],
 
   "depends": {
     "fabricloader": ">=0.7.4",
     "fabric": "*",
     "minecraft": "1.16.x"
-  },
-  "suggests": {
-    "another-mod": "*"
   }
 }

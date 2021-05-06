@@ -1,7 +1,7 @@
-package net.fabricmc.example.mixin;
+package com.minenash.creative_library.mixin;
 
-import net.fabricmc.example.CreativeLibraryEditScreen;
-import net.fabricmc.example.CreativeLibraryStorage;
+import com.minenash.creative_library.CreativeLibraryEditScreen;
+import com.minenash.creative_library.CreativeLibraryStorage;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
@@ -80,7 +80,7 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 	@Redirect(method = "drawBackground", at = @At(value = "NEW", target = "net/minecraft/util/Identifier", ordinal = 0))
 	private Identifier libraryTabTexture(String id) {
 		if (id.equals("textures/gui/container/creative_inventory/tab_library"))
-			return new Identifier("modid", "textures/tab_creative_library.png");
+			return new Identifier("creative_library", "textures/tab_creative_library.png");
 		return new Identifier(id);
 	}
 
@@ -94,7 +94,7 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 	@ModifyConstant(method = "drawBackground", constant = @Constant(intValue = 112))
 	private int shortenScrollbar3(int _in) { return SCROLLBAR_BOTTOM; }
 
-	private static final Identifier EDIT_BUTTON_TEXTURE = new Identifier("modid","textures/tab_creative_library.png");
+	private static final Identifier EDIT_BUTTON_TEXTURE = new Identifier("creative_library","textures/tab_creative_library.png");
 	@Inject(method = "render", at = @At("TAIL"))
 	private void editButtonHover(MatrixStack matrices, int mouseX, int mouseY, float _delta, CallbackInfo _info) {
 		if (inEditButtonLocation(mouseX, mouseY)) {
