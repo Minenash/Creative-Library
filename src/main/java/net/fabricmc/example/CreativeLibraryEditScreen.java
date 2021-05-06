@@ -1,46 +1,27 @@
 package net.fabricmc.example;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.datafixers.util.Pair;
 
 import java.util.*;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryListener;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
-import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.item.TooltipContext;
-import net.minecraft.client.options.HotbarStorage;
-import net.minecraft.client.options.HotbarStorageEntry;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraft.screen.ScreenHandler;
-import net.minecraft.screen.ScreenHandlerListener;
-import net.minecraft.screen.ScreenHandlerType;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
-import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
-import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,10 +29,9 @@ import org.jetbrains.annotations.Nullable;
 public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeLibraryEditScreen.CreativeScreenHandler> {
     private static final Identifier SCROLL_TEXTURE = new Identifier("textures/gui/container/creative_inventory/tabs.png");
     private static final Identifier INV_TEXTURE = new Identifier("modid","textures/creative_library_edit.png");
-    private float scrollPosition;
+    public static float scrollPosition = 0;
     private boolean scrolling;
     private CreativeInventoryListener listener;
-    private boolean lastClickOutsideBounds;
 
     public CreativeLibraryEditScreen(PlayerEntity player) {
         super(new CreativeLibraryEditScreen.CreativeScreenHandler(player), player.inventory, LiteralText.EMPTY);
@@ -152,11 +132,11 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
             if (isLibrarySlot)
                 slot.setStack(ItemStack.EMPTY);
             else
-                handler.addStack(slotStack, scrollPosition);
+                handler.addStack(slotStack);
         }
 
         if (isLibrarySlot)
-            handler.setSlot(slot, invSlot, scrollPosition);
+            handler.setSlot(slot, invSlot);
 
     }
 
@@ -176,9 +156,9 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
 
     public boolean mouseScrolled(double mouseX, double mouseY, double amount) {
         int i = (this.handler.itemList.size() + 9 - 1) / 9 - 5;
-        this.scrollPosition = (float)((double)this.scrollPosition - amount / (double)i);
-        this.scrollPosition = MathHelper.clamp(this.scrollPosition, 0.0F, 1F);
-        this.handler.scrollItems(this.scrollPosition);
+        scrollPosition = (float)((double)scrollPosition - amount / (double)i);
+        scrollPosition = MathHelper.clamp(scrollPosition, 0.0F, 1F);
+        this.handler.scrollItems();
         return true;
     }
 
@@ -186,9 +166,9 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
         if (this.scrolling) {
             float i = this.y + 18;
             float j = i + 108;
-            this.scrollPosition = (float)(mouseY - i - 7.5F) / ((j - i) - 15.0F);
-            this.scrollPosition = MathHelper.clamp(this.scrollPosition, 0.0F, 1F);
-            this.handler.scrollItems(this.scrollPosition);
+            scrollPosition = (float)(mouseY - i - 7.5F) / ((j - i) - 15.0F);
+            scrollPosition = MathHelper.clamp(scrollPosition, 0.0F, 1F);
+            this.handler.scrollItems();
             return true;
         } else {
             return super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
@@ -213,8 +193,7 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
     }
 
     protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
-        this.lastClickOutsideBounds = mouseX < (double)left || mouseY < (double)top || mouseX >= (double)(left + this.backgroundWidth) || mouseY >= (double)(top + this.backgroundHeight);
-        return this.lastClickOutsideBounds;
+        return mouseX < (double) left || mouseY < (double) top || mouseX >= (double) (left + this.backgroundWidth) || mouseY >= (double) (top + this.backgroundHeight);
     }
 
     protected boolean isClickInScrollbar(double mouseX, double mouseY) {
@@ -245,14 +224,15 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
         int j = this.y + 18;
         int k = j + 108;
         this.client.getTextureManager().bindTexture(SCROLL_TEXTURE);
-        this.drawTexture(matrices, i, j + (int)((float)(k - j - 17) * this.scrollPosition), 232, 0, 12, 15);
+        this.drawTexture(matrices, i, j + (int)((float)(k - j - 17) * scrollPosition), 232, 0, 12, 15);
     }
 
     @Environment(EnvType.CLIENT)
     public static class CreativeScreenHandler extends ScreenHandler {
-        private static final List<ItemStack> THREE_EMPTY_ROWS = Collections.nCopies(21, ItemStack.EMPTY);
+        private static final List<ItemStack> FOUR_EMPTY_ROWS = Collections.nCopies(36, ItemStack.EMPTY);
+        private static final List<ItemStack> THREE_EMPTY_ROWS = Collections.nCopies(27, ItemStack.EMPTY);
         private static final List<ItemStack> ONE_EMPTY_ROW  = Collections.nCopies(9,  ItemStack.EMPTY);
-        public final List<ItemStack> itemList;
+        public List<ItemStack> itemList;
         public final Inventory inventory;
 
         public CreativeScreenHandler(PlayerEntity playerEntity) {
@@ -277,7 +257,8 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
             addSlot(new Slot(playerInv, 37, 173, 176));
             addSlot(new Slot(playerInv, 40, 173, 198));
 
-            this.scrollItems(0.0F);
+
+            this.scrollItems();
         }
 
         private void addSlots(Inventory inv, int index, int y, int rows) {
@@ -286,8 +267,8 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
                     this.addSlot(new Slot(inv, index + col + row*9, 9 + col*18, y + row*18));
         }
 
-        public void scrollItems(float position) {
-            int j = getRow(position);
+        public void scrollItems() {
+            int j = getRow();
             for (int k = 0; k < 6; ++k) {
                 for (int l = 0; l < 9; ++l) {
                     int m = l + (k + j) * 9;
@@ -297,31 +278,36 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
 
         }
 
-        private int getRow(float position) {
-            return Math.max(0, (int)((position * (this.itemList.size() / 9F - 6)) + 0.5D));
+        private int getRow() {
+            return (int) Math.max(0, (int)((CreativeLibraryEditScreen.scrollPosition) * (this.itemList.size() / 9F - 6)) + 0.5D);
         }
 
-        public void setSlot(Slot slot, int slotID, float position) {
-            itemList.set(getRow(position)*9 + slotID, slot.getStack());
+        public void setSlot(Slot slot, int slotID) {
+            itemList.set(getRow()*9 + slotID, slot.getStack());
 
-            while (!itemList.subList(itemList.size()-21,itemList.size()).equals(THREE_EMPTY_ROWS))
-                itemList.addAll(ONE_EMPTY_ROW);
+            ensureThreeExtraRows();
 
-            System.out.println("Set slot [" + (getRow(position)*9 + slotID) + "] to [" + slot.getStack().getName().getString() + "]");
+            System.out.println("Set slot [" + (getRow()*9 + slotID) + "] to [" + slot.getStack().getName().getString() + "]");
         }
 
-        public void addStack(ItemStack stack, float position) {
+        public void addStack(ItemStack stack) {
             int index = itemList.size() - 1;
             while (itemList.get(index).isEmpty())
                 index--;
             itemList.set(++index, stack);
-
-            while (!itemList.subList(itemList.size()-21,itemList.size()).equals(THREE_EMPTY_ROWS))
-                itemList.addAll(ONE_EMPTY_ROW);
+            ensureThreeExtraRows();
 
             System.out.println("Set slot [" + index + "] to [" + stack.getName().getString() + "]");
 
-            scrollItems(position);
+            scrollItems();
+        }
+
+        private void ensureThreeExtraRows() {
+            while (itemList.subList(itemList.size()-36, itemList.size()).equals(FOUR_EMPTY_ROWS))
+                itemList = itemList.subList(0, itemList.size() - 9);
+
+            while (!itemList.subList(itemList.size()-27,itemList.size()).equals(THREE_EMPTY_ROWS))
+                itemList.addAll(ONE_EMPTY_ROW);
         }
 
         public boolean canUse(PlayerEntity player) {
