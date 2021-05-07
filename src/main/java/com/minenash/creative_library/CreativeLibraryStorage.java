@@ -3,6 +3,8 @@ package com.minenash.creative_library;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -20,11 +22,13 @@ import org.apache.logging.log4j.Logger;
 @Environment(EnvType.CLIENT)
 public class CreativeLibraryStorage {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static final File file =  new File(MinecraftClient.getInstance().runDirectory, "creative_library.nbt");
     private static List<ItemStack> items = new ArrayList<>();
     private static boolean loaded;
 
-    private static void load() {
+    private static File file;
+
+    private static void load(String fileName) {
+        CreativeLibraryStorage.file = new File("config/creative_library/" + fileName + ".nbt");
         try {
             CompoundTag compoundTag = NbtIo.read(file);
             if (compoundTag == null)
@@ -63,15 +67,34 @@ public class CreativeLibraryStorage {
     }
 
     public static List<ItemStack> getLibrary() {
-        if (!loaded) {
-            load();
-            loaded = true;
-        }
         return items;
     }
 
     public static void setLibrary(List<ItemStack> items) {
-        CreativeLibraryStorage.items = items;
+        CreativeLibraryStorage.items = items.stream().map(ItemStack::copy).collect(Collectors.toList());
+    }
+
+
+    public static void loadFromServer(String address, int port) {
+        load("servers/" + address + "_" + port);
+    }
+
+    public static void loadFromWorld(String worldName) {
+        load("singleplayer/" + worldName);
+    }
+
+    private static final Pattern RESERVED_FILENAMES_PATTERN = Pattern.compile(".*\\.|(?:COM|CLOCK\\$|CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\\..*)?", Pattern.CASE_INSENSITIVE);
+    public static void loadFromRealm(String realmName) {
+        for (char c : SharedConstants.INVALID_CHARS_LEVEL_NAME)
+            realmName = realmName.replace(c, '_');
+
+        if (RESERVED_FILENAMES_PATTERN.matcher(realmName).matches())
+            realmName = "_" + realmName + "_";
+
+        if (realmName.length() > 255 - 4)
+            realmName = realmName.substring(0, 255 - 4);
+
+        load("realms/" + realmName);
     }
 }
 

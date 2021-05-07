@@ -1,4 +1,4 @@
-package com.minenash.creative_library.mixin;
+package com.minenash.creative_library.mixin.creative_screen;
 
 import com.minenash.creative_library.CreativeLibraryStorage;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;

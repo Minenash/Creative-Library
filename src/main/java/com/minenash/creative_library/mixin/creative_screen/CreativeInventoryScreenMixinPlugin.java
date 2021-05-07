@@ -1,4 +1,4 @@
-package com.minenash.creative_library.mixin;
+package com.minenash.creative_library.mixin.creative_screen;
 
 import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;

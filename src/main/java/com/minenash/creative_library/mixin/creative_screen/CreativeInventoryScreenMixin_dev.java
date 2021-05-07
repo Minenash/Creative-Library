@@ -1,4 +1,4 @@
-package com.minenash.creative_library.mixin;
+package com.minenash.creative_library.mixin.creative_screen;
 
 import com.minenash.creative_library.CreativeLibraryStorage;
 import net.minecraft.block.Blocks;
@@ -20,9 +20,9 @@ public class CreativeInventoryScreenMixin_dev {
     private boolean getItems_dev(DefaultedList<ItemStack> list, Collection<ItemStack> _in) {
         if (runNumber++ == 8) {
             runNumber = 0;
-//			for (int i = 0; i < 6*9/2; i++)
-//				CreativeLibraryStorage.getLibrary().add(new ItemStack(randomWool()));
-//				CreativeLibraryStorage.save();
+			for (int i = 0; i < 6*9/2; i++)
+				CreativeLibraryStorage.getLibrary().add(new ItemStack(randomWool()));
+				CreativeLibraryStorage.save();
             return list.addAll(CreativeLibraryStorage.getLibrary());
         }
         return false;

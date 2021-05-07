@@ -3,9 +3,14 @@ package com.minenash.creative_library;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.options.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import org.lwjgl.glfw.GLFW;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class CreativeLibrary implements ClientModInitializer {
 
@@ -16,7 +21,16 @@ public class CreativeLibrary implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		System.out.println(CreativeLibraryStorage.getLibrary());
+
+		try {
+			Path path = FabricLoader.getInstance().getConfigDir().resolve("creative_library");
+			Files.createDirectories(path.resolve("singleplayer"));
+			Files.createDirectories(path.resolve("servers"));
+			Files.createDirectories(path.resolve("realms"));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		ClientTickEvents.END_CLIENT_TICK.register(client -> {
 			while (OPEN_SCREEN.wasPressed())
 				client.openScreen(new CreativeLibraryEditScreen(client.player));
