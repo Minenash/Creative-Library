@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+import com.minenash.creative_library.config.Config;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.SharedConstants;
@@ -22,15 +23,15 @@ import org.apache.logging.log4j.Logger;
 @Environment(EnvType.CLIENT)
 public class CreativeLibraryStorage {
     private static final Logger LOGGER = LogManager.getLogger();
-    private static List<ItemStack> items = new ArrayList<>();
-    private static boolean loaded;
+    private static List<ItemStack> items;
 
-    private static File file;
+    private static File perServer;
+    private static final File universal = new File("config/creative_library/universal.nbt");
 
-    private static void load(String fileName) {
-        CreativeLibraryStorage.file = new File("config/creative_library/" + fileName + ".nbt");
+    public static void load() {
+        items = new ArrayList<>();
         try {
-            CompoundTag compoundTag = NbtIo.read(file);
+            CompoundTag compoundTag = NbtIo.read(Config.usePerServerLibrary ? perServer : universal);
             if (compoundTag == null)
                 return;
 
@@ -59,7 +60,7 @@ public class CreativeLibraryStorage {
             compoundTag.putInt("DataVersion", SharedConstants.getGameVersion().getWorldVersion());
             compoundTag.put("0", listTag);
 
-            NbtIo.write(compoundTag, file);
+            NbtIo.write(compoundTag, Config.usePerServerLibrary ? perServer : universal);
         } catch (Exception var3) {
             LOGGER.error("Failed to save creative mode options", var3);
         }
@@ -74,17 +75,16 @@ public class CreativeLibraryStorage {
         CreativeLibraryStorage.items = items.stream().map(ItemStack::copy).collect(Collectors.toList());
     }
 
-
-    public static void loadFromServer(String address, int port) {
-        load("servers/" + address + "_" + port);
+    public static void setFromServer(String address, int port) {
+        perServer = new File("config/creative_library/servers/" + address + "_" + port + ".nbt");
     }
 
-    public static void loadFromWorld(String worldName) {
-        load("singleplayer/" + worldName);
+    public static void setFromWorld(String worldName) {
+        perServer = new File("config/creative_library/singleplayer/" + worldName + ".nbt");
     }
 
     private static final Pattern RESERVED_FILENAMES_PATTERN = Pattern.compile(".*\\.|(?:COM|CLOCK\\$|CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\\..*)?", Pattern.CASE_INSENSITIVE);
-    public static void loadFromRealm(String realmName) {
+    public static void setFromRealm(String realmName) {
         for (char c : SharedConstants.INVALID_CHARS_LEVEL_NAME)
             realmName = realmName.replace(c, '_');
 
@@ -94,7 +94,7 @@ public class CreativeLibraryStorage {
         if (realmName.length() > 255 - 4)
             realmName = realmName.substring(0, 255 - 4);
 
-        load("realms/" + realmName);
+        perServer = new File("config/creative_library/realms/" + realmName + ".nbt");
     }
 }
 

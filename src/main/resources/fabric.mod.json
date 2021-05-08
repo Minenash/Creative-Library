@@ -19,9 +19,8 @@
 
   "environment": "*",
   "entrypoints": {
-    "client": [
-      "com.minenash.creative_library.CreativeLibrary"
-    ]
+    "client": [ "com.minenash.creative_library.CreativeLibrary" ],
+    "modmenu": [ "com.minenash.creative_library.config.ModMenuEntryPoint"]
   },
   "mixins": [
     "creative_library.mixins.json"

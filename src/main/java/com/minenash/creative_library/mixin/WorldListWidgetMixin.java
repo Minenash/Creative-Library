@@ -17,6 +17,7 @@ public class WorldListWidgetMixin {
 
     @Inject(method = "play", at = @At("HEAD"))
     public void setFilename(CallbackInfo info) {
-        CreativeLibraryStorage.loadFromWorld(level.getName());
+        CreativeLibraryStorage.setFromWorld(level.getName());
+        CreativeLibraryStorage.load();
     }
 }

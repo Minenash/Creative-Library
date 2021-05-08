@@ -1,3 +1,7 @@
 {
-  "itemGroup.hotbar": "Library"
+  "itemGroup.hotbar": "Library",
+  "creative_library.tinyconfig.title": "Creative Library",
+  "creative_library.tinyconfig.usePerServerLibrary": "Library per World/Server",
+  "creative_library.tinyconfig.boolean.true": "True",
+  "creative_library.tinyconfig.boolean.false": "False"
 }

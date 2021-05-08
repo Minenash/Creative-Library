@@ -12,6 +12,7 @@ public class ConnectScreenMixin {
 
     @Inject(method = "connect", at = @At("HEAD"), cancellable = true)
     public void getImage(String address, int port, CallbackInfo info) {
-        CreativeLibraryStorage.loadFromServer(address, port);
+        CreativeLibraryStorage.setFromServer(address, port);
+        CreativeLibraryStorage.load();
     }
 }

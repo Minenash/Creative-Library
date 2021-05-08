@@ -12,7 +12,8 @@ public class LevelStorageMixin {
 
     @Inject(method = "levelExists", at = @At("HEAD"))
     private void getLevelName(String level, CallbackInfoReturnable<Boolean> _info) {
-        CreativeLibraryStorage.loadFromWorld(level);
+        CreativeLibraryStorage.setFromWorld(level);
+        CreativeLibraryStorage.load();
     }
 
 }

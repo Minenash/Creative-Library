@@ -14,8 +14,10 @@ public class RealmsMainScreenMixin {
 
     @Inject(method = "play", at = @At("HEAD"))
     private void getRealmNameID(RealmsServer realmsServer, Screen parent, CallbackInfo info) {
-        if (realmsServer != null)
-            CreativeLibraryStorage.loadFromRealm(realmsServer.name);
+        if (realmsServer != null) {
+            CreativeLibraryStorage.setFromRealm(realmsServer.name);
+            CreativeLibraryStorage.load();
+        }
     }
 
 }

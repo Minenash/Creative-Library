@@ -20,9 +20,11 @@ public class CreativeInventoryScreenMixin_dev {
     private boolean getItems_dev(DefaultedList<ItemStack> list, Collection<ItemStack> _in) {
         if (runNumber++ == 8) {
             runNumber = 0;
-			for (int i = 0; i < 6*9/2; i++)
-				CreativeLibraryStorage.getLibrary().add(new ItemStack(randomWool()));
-				CreativeLibraryStorage.save();
+            if (CreativeLibraryStorage.getLibrary().isEmpty()) {
+                for (int i = 0; i < 3 * 9; i++)
+                    CreativeLibraryStorage.getLibrary().add(new ItemStack(randomWool()));
+                CreativeLibraryStorage.save();
+            }
             return list.addAll(CreativeLibraryStorage.getLibrary());
         }
         return false;
