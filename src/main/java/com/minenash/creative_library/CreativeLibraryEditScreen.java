@@ -269,7 +269,7 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
         }
 
         private int getRow() {
-            return (int) Math.max(0, (int)((CreativeLibraryEditScreen.scrollPosition) * (this.itemList.size() / 9F - 6)) + 0.5D);
+            return (int) Math.max(0, (int)(CreativeLibraryEditScreen.scrollPosition * (this.itemList.size() / 9F - 6)) + 0.5D);
         }
 
         public void setSlot(Slot slot, int slotID) {
@@ -286,17 +286,24 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
 
             itemList.set(++index, stack);
             ensureThreeExtraRows();
-            scrollItems();
 
             //System.out.println("Set slot [" + index + "] to [" + stack.getName().getString() + "]");
         }
 
         private void ensureThreeExtraRows() {
-//            while (itemList.subList(itemList.size()-36, itemList.size()).equals(FOUR_EMPTY_ROWS))
-//                itemList = itemList.subList(0, itemList.size() - 9);
+
+            int row = getRow();
+
+            while (itemList.subList(itemList.size()-36, itemList.size()).equals(FOUR_EMPTY_ROWS))
+                itemList = itemList.subList(0, itemList.size() - 9);
 
             while (!itemList.subList(itemList.size()-27, itemList.size()).equals(THREE_EMPTY_ROWS))
                 itemList.addAll(ONE_EMPTY_ROW);
+
+            int listSize = itemList.size() == 54 ? 55 : itemList.size();
+            scrollPosition = MathHelper.clamp(row / (listSize / 9F - 6), 0.0F, 1F);
+
+            scrollItems();
         }
 
         public boolean canUse(PlayerEntity player) {
