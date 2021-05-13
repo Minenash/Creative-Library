@@ -10,11 +10,11 @@ I do not have any plans to port this to Forge, however the [license is MIT](http
 #### Screenshots
 Library Tab
 
-![Library Tab 1](https://i.imgur.com/ZcpvcHg.png)
-![Library Tab 2](https://i.imgur.com/QYlttLN.png)
+![Library Tab 1](https://i.imgur.com/YbyWjyU.png)
+![Library Tab 2](https://i.imgur.com/PeHO2Yx.png)
 
 <br>
 
 Library Edit Screen
 
-![Edit Library Screen](https://i.imgur.com/B2jRC40.png)
+![Edit Library Screen](https://i.imgur.com/cruFGlp.png)
