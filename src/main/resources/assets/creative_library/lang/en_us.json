@@ -3,5 +3,6 @@
   "creative_library.tinyconfig.title": "Creative Library",
   "creative_library.tinyconfig.usePerServerLibrary": "Library per World/Server",
   "creative_library.tinyconfig.boolean.true": "True",
-  "creative_library.tinyconfig.boolean.false": "False"
+  "creative_library.tinyconfig.boolean.false": "False",
+  "creative_library.keybind.open_edit_screen": "Quick Open Creative Library Edit Screen"
 }

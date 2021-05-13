@@ -25,13 +25,13 @@ public class CreativeLibraryStorage {
     private static final Logger LOGGER = LogManager.getLogger();
     private static List<ItemStack> items;
 
-    private static File perServer;
+    private static File perServer = null;
     private static final File universal = new File("config/creative_library/universal.nbt");
 
     public static void load() {
         items = new ArrayList<>();
         try {
-            CompoundTag compoundTag = NbtIo.read(Config.usePerServerLibrary ? perServer : universal);
+            CompoundTag compoundTag = NbtIo.read(!Config.usePerServerLibrary || perServer == null? universal : perServer);
             if (compoundTag == null)
                 return;
 
