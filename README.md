@@ -11,7 +11,7 @@ I do not have any plans to port this to Forge, however the [license is MIT](http
 Library Tab
 
 ![Library Tab 1](https://i.imgur.com/YbyWjyU.png)
-![Library Tab 2](https://i.imgur.com/PeHO2Yx.png)
+![Library Tab 2](https://i.imgur.com/xEV6W6R.png)
 
 <br>
 
