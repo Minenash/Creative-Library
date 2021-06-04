@@ -1,6 +1,6 @@
-package com.minenash.creative_library.mixin;
+package com.minenash.creative_library.mixin.server_identifiers;
 
-import com.minenash.creative_library.CreativeLibraryStorage;
+import com.minenash.creative_library.library.LibrarySet;
 import net.minecraft.client.gui.screen.world.WorldListWidget;
 import net.minecraft.world.level.storage.LevelSummary;
 import org.spongepowered.asm.mixin.Final;
@@ -17,7 +17,6 @@ public class WorldListWidgetMixin {
 
     @Inject(method = "play", at = @At("HEAD"))
     public void setFilename(CallbackInfo info) {
-        CreativeLibraryStorage.setFromWorld(level.getName());
-        CreativeLibraryStorage.load();
+        LibrarySet.loadWorld(level.getName());
     }
 }

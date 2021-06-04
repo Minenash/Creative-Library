@@ -1,8 +1,46 @@
 {
-  "itemGroup.hotbar": "Library",
+  "Translation Note 1:": "Translation keys that contain the word server, have the word server missing from the translation,",
+  "Translation Note 2:": "so that it can be replaced with World/Server/Realm depending on what the player is in",
+
   "creative_library.tinyconfig.title": "Creative Library",
-  "creative_library.tinyconfig.usePerServerLibrary": "Library per World/Server",
-  "creative_library.tinyconfig.boolean.true": "True",
-  "creative_library.tinyconfig.boolean.false": "False",
-  "creative_library.keybind.open_edit_screen": "Quick Open Creative Library Edit Screen"
+  "creative_library.tinyconfig.replaceHotBarWithPrimaryLibrary": "Replace Hotbar Tab with Primary Library Tab",
+  "creative_library.tinyconfig.primaryLibraryTab": "Primary Library Tab",
+  "creative_library.tinyconfig.enum.PrimaryLibrary.UNIVERSAL": "Universal",
+  "creative_library.tinyconfig.enum.PrimaryLibrary.SERVER": "Server",
+  "creative_library.tinyconfig.boolean.true": "§aYes",
+  "creative_library.tinyconfig.boolean.false": "§cNo",
+
+  "creative_library.keybind.open_edit_screen": "Quick Open Creative Library Edit Screen",
+
+  "creative_library.screen.library_settings.title": "\"%s\" Settings",
+  "creative_library.screen.new_library.title": "Create New Library",
+  "creative_library.screen.clone_library.title": "Clone Library",
+
+  "creative_library.screen.options.name_field": "Enter Library Name",
+  "creative_library.screen.options.tie_to_server": "Tie to %s",
+  "creative_library.screen.options.position": "Position",
+  "creative_library.screen.options.sever_settings": "%s Settings",
+  "creative_library.screen.options.primary_library_tab.line_1": "Primary Library Tab",
+  "creative_library.screen.options.primary_library_tab.line_2": "(Overwrites Global)",
+
+  "creative_library.button.create": "Create",
+  "creative_library.button.save": "Save",
+  "creative_library.button.cancel": "Cancel",
+  "creative_library.button.delete": "§cDelete",
+  "creative_library.button.delete_short": "§cD",
+
+  "creative_library.button.position.first_primary": "First / Primary",
+  "creative_library.button.position.last": "Last",
+
+  "creative_library.library": "Library",
+  "creative_library.world": "World",
+  "creative_library.server": "Server",
+  "creative_library.realm": "Realm",
+  "creative_library.universal": "Universal",
+  "creative_library.default": "Default",
+
+  "creative_library.tooltip.edit_library_contents": "Edit Library Contents",
+  "creative_library.tooltip.create_new_library": "Create New Library",
+  "creative_library.tooltip.clone_library": "Clone Library",
+  "creative_library.tooltip.library_settings": "Library Settings"
 }

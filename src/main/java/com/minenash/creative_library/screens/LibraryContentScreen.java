@@ -1,11 +1,14 @@
-package com.minenash.creative_library;
+package com.minenash.creative_library.screens;
 
+import com.minenash.creative_library.library.Library;
+import com.minenash.creative_library.library.LibrarySet;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import java.util.*;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryListener;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
@@ -25,20 +28,23 @@ import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
 
+import static com.minenash.creative_library.screens.LibraryButton.*;
+
 @Environment(EnvType.CLIENT)
-public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeLibraryEditScreen.CreativeScreenHandler> {
-    private static final Identifier SCROLL_TEXTURE = new Identifier("textures/gui/container/creative_inventory/tabs.png");
+public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContentScreen.CreativeScreenHandler> {
     private static final Identifier INV_TEXTURE = new Identifier("creative_library","textures/creative_library_edit.png");
     public static float scrollPosition = 0;
     private boolean scrolling;
     private CreativeInventoryListener listener;
+    private final Screen previousScreen;
 
-    public CreativeLibraryEditScreen(PlayerEntity player) {
-        super(new CreativeLibraryEditScreen.CreativeScreenHandler(player), player.inventory, LiteralText.EMPTY);
+    public LibraryContentScreen(Screen previousScreen, PlayerEntity player, Library library) {
+        super(new LibraryContentScreen.CreativeScreenHandler(player, library), player.inventory, LiteralText.EMPTY);
         player.currentScreenHandler = this.handler;
         this.passEvents = true;
         this.backgroundHeight = 223;
         this.backgroundWidth = 195;
+        this.previousScreen = previousScreen;
     }
 
     protected void init() {
@@ -58,6 +64,10 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
             this.client.player.playerScreenHandler.removeListener(this.listener);
     }
 
+    public void onClose() {
+        this.client.openScreen(previousScreen);
+    }
+
     public void tick() {
         if (!this.client.interactionManager.hasCreativeInventory())
             this.client.openScreen(new InventoryScreen(this.client.player));
@@ -65,7 +75,6 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
 
     private boolean cursorItemIsAFAAAAAKE = false;
     protected void onMouseClick(@Nullable Slot slot, int invSlot, int clickData, SlotActionType actionType) {
-
         //System.out.println("Action: " + actionType + " | click:" + clickData + " | invSlot: " + invSlot);
 
         boolean isLibrarySlot = slot != null && slot.inventory == handler.inventory;
@@ -146,11 +155,26 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
     }
 
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == 0 && this.isClickInScrollbar(mouseX, mouseY)) {
+        if (button != 0)
+            return super.mouseClicked(mouseX, mouseY, button);
+
+
+        if (mouseX >= x + 175 && mouseY >= y + 18 && mouseX < x + 175 + 14 && mouseY < y + 18 + 108)
             this.scrolling = true;
-            return true;
-        }
-        return super.mouseClicked(mouseX, mouseY, button);
+
+        else if (ADD_BUTTON.isIn(x,y,mouseX,mouseY))
+            client.openScreen(EditLibraryScreen.create(this));
+
+        else if (CLONE_BUTTON.isIn(x,y,mouseX,mouseY))
+            client.openScreen(EditLibraryScreen.clone(this, handler.library));
+
+        else if (SETTINGS_BUTTON.isIn(x,y,mouseX,mouseY))
+            client.openScreen(EditLibraryScreen.edit(this, handler.library));
+        else
+            return super.mouseClicked(mouseX, mouseY, button);
+
+        return true;
+
     }
 
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
@@ -180,14 +204,8 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
         }
     }
 
-
-
     protected boolean isClickOutsideBounds(double mouseX, double mouseY, int left, int top, int button) {
-        return mouseX < (double) left || mouseY < (double) top || mouseX >= (double) (left + this.backgroundWidth) || mouseY >= (double) (top + this.backgroundHeight);
-    }
-
-    protected boolean isClickInScrollbar(double mouseX, double mouseY) {
-        return mouseX >= x + 175 && mouseY >= y + 18 && mouseX < x + 175 + 14 && mouseY < y + 18 + 108;
+        return mouseX < left || mouseY < top || mouseX >= (left + backgroundWidth) || mouseY >= (top + backgroundHeight);
     }
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -201,7 +219,7 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
     private static final Text INV_TEXT = new TranslatableText("container.inventory");
     protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
         RenderSystem.disableBlend();
-        this.textRenderer.draw(matrices, "Library", 8.0F, 6.0F, 4210752);
+        this.textRenderer.draw(matrices, handler.library.name, 8.0F, 6.0F, 4210752);
         this.textRenderer.draw(matrices, INV_TEXT, 8.0F, 129.0F, 4210752);
     }
 
@@ -213,8 +231,10 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
         int i = this.x + 175;
         int j = this.y + 18;
         int k = j + 108;
-        this.client.getTextureManager().bindTexture(SCROLL_TEXTURE);
         this.drawTexture(matrices, i, j + (int)((float)(k - j - 17) * scrollPosition), 232, 0, 12, 15);
+
+        CreativeInventoryScreenMixinCallback.renderButtonsAndTooltips(this, matrices, -1, x, y, mouseX, mouseY);
+
     }
 
     @Environment(EnvType.CLIENT)
@@ -223,15 +243,17 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
         private static final List<ItemStack> THREE_EMPTY_ROWS = Collections.nCopies(27, ItemStack.EMPTY);
         private static final List<ItemStack> ONE_EMPTY_ROW  = Collections.nCopies(9,  ItemStack.EMPTY);
         public List<ItemStack> itemList;
+        public final Library library;
         public final Inventory inventory;
 
-        public CreativeScreenHandler(PlayerEntity playerEntity) {
+        public CreativeScreenHandler(PlayerEntity playerEntity, Library library) {
             super(null, 987456);
             PlayerInventory playerInv = playerEntity.inventory;
             inventory = new SimpleInventory(54);
             inventory.onOpen(playerEntity);
+            this.library = library;
 
-            itemList = CreativeLibraryStorage.getLibrary();
+            itemList = library.getItems();
             itemList.addAll(Collections.nCopies(9 - (itemList.size() % 9), ItemStack.EMPTY));
             itemList.addAll(THREE_EMPTY_ROWS);
 
@@ -245,7 +267,7 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
             addSlot(new Slot(playerInv, 39, 173, 140));
             addSlot(new Slot(playerInv, 38, 173, 158));
             addSlot(new Slot(playerInv, 37, 173, 176));
-            addSlot(new Slot(playerInv, 40, 173, 198));
+            addSlot(new Slot(playerInv, 36, 173, 198));
 
 
             this.scrollItems();
@@ -269,7 +291,7 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
         }
 
         private int getRow() {
-            return (int) Math.max(0, (int)(CreativeLibraryEditScreen.scrollPosition * (this.itemList.size() / 9F - 6)) + 0.5D);
+            return (int) Math.max(0, (int)(LibraryContentScreen.scrollPosition * (this.itemList.size() / 9F - 6)) + 0.5D);
         }
 
         public void setSlot(Slot slot, int slotID) {
@@ -295,7 +317,7 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
             int row = getRow();
 
             while (itemList.subList(itemList.size()-36, itemList.size()).equals(FOUR_EMPTY_ROWS))
-                itemList = itemList.subList(0, itemList.size() - 9);
+                itemList = itemList.subList(0, Math.max(0, itemList.size() - 9));
 
             while (!itemList.subList(itemList.size()-27, itemList.size()).equals(THREE_EMPTY_ROWS))
                 itemList.addAll(ONE_EMPTY_ROW);
@@ -316,8 +338,10 @@ public class CreativeLibraryEditScreen extends AbstractInventoryScreen<CreativeL
             while (itemList.size() > 0 && itemList.get(itemList.size()-1).isEmpty())
                 itemList.remove(itemList.size()-1);
 
-            CreativeLibraryStorage.setLibrary(itemList);
-            CreativeLibraryStorage.save();
+            library.setItems(itemList);
+            LibrarySet.universal.save();
+            LibrarySet.server.save();
+
             this.inventory.onClose(player);
         }
 

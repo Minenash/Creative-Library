@@ -1,32 +1,24 @@
-package com.minenash.creative_library.mixin.creative_screen;
+package com.minenash.creative_library.mixin.server_identifiers;
 
-import com.minenash.creative_library.config.Config;
+import com.minenash.creative_library.library.Library;
 import com.minenash.creative_library.library.LibrarySet;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.item.ItemConvertible;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.world.level.storage.LevelStorage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.Collection;
+import java.util.List;
 
-@Mixin(CreativeInventoryScreen.class)
-public class CreativeInventoryScreenMixin_dev {
+@Mixin(LevelStorage.class)
+public class LevelStorageMixin {
 
-    private int runNumber = 0;
-    @Redirect(method = "setSelectedTab", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/DefaultedList;addAll(Ljava/util/Collection;)Z"))
-    private boolean creativeLibrary$getItems_dev(DefaultedList<ItemStack> list, Collection<ItemStack> hotbarRow) {
-        if (!Config.replaceHotBarWithPrimaryLibrary)
-            return list.addAll(hotbarRow);
-
-        if (runNumber++ == 8) {
-            runNumber = 0;
-            return list.addAll(LibrarySet.getMain().getItems());
-        }
-        return false;
+    @Inject(method = "levelExists", at = @At("HEAD"))
+    private void getLevelName(String level, CallbackInfoReturnable<Boolean> _info) {
+        LibrarySet.loadWorld(level);
     }
 
     private ItemConvertible randomWool() {

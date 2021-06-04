@@ -2,13 +2,14 @@ package com.minenash.creative_library.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.minenash.creative_library.CreativeLibraryStorage;
+import com.minenash.creative_library.DynamicItemGroups;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -160,7 +161,7 @@ public class TinyConfig {
 
     public static void write() {
         try {
-            CreativeLibraryStorage.load(); // INSERTED LINE, Don't forget to include this when updating TinyConfig
+            ((DynamicItemGroups) ItemGroup.BUILDING_BLOCKS).creativeLibrary$setItemGroupLibraries(); // INSERTED LINE, Don't forget to include this when updating TinyConfig
             LOGGER.info(MOD_NAME + ": Saving config.");
             if (!Files.exists(path)) Files.createFile(path);
             Files.write(path, gson.toJson(configClass.newInstance()).getBytes());
