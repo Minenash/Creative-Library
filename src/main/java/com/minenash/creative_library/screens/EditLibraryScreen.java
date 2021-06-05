@@ -6,7 +6,6 @@ import com.minenash.creative_library.library.Library;
 import com.minenash.creative_library.library.LibrarySet;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.AbstractButtonWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -24,7 +23,7 @@ public class EditLibraryScreen extends Screen {
     private boolean tieToServer = false;
     private PositionSliderWidget position;
     private PrimaryLibrary hotbarOverride;
-    private AbstractButtonWidget createSaveButton;
+    private ButtonWidget createSaveButton;
 
 
 
@@ -60,33 +59,33 @@ public class EditLibraryScreen extends Screen {
 
         int y = this.height / 4 + 144 + 5;
         if (newLibrary) {
-            this.addButton(new ButtonWidget(this.width / 2 - 100, y, 98, 20, new TranslatableText("creative_library.button.cancel"), _button -> onClose()));
-            createSaveButton = this.addButton(new ButtonWidget(this.width / 2, y, 98, 20, new TranslatableText("creative_library.button.create"), _button -> createLibrary()));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, y, 98, 20, new TranslatableText("creative_library.button.cancel"), _button -> onClose()));
+            createSaveButton = this.addDrawableChild(new ButtonWidget(this.width / 2, y, 98, 20, new TranslatableText("creative_library.button.create"), _button -> createLibrary()));
         }
         else {
-            this.addButton(new ButtonWidget(this.width / 2 - 100, y, 88, 20, new TranslatableText("creative_library.button.cancel"), _button -> onClose()));
-            this.addButton(new ButtonWidget(this.width / 2 - 10, y, 20, 20, new TranslatableText("creative_library.button.delete_short"), _button -> delete()));
-            createSaveButton = this.addButton(new ButtonWidget(this.width / 2 + 12, y, 88, 20, new TranslatableText("creative_library.button.save"), _button -> saveLibrary()));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, y, 88, 20, new TranslatableText("creative_library.button.cancel"), _button -> onClose()));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 - 10, y, 20, 20, new TranslatableText("creative_library.button.delete_short"), _button -> delete()));
+            createSaveButton = this.addDrawableChild(new ButtonWidget(this.width / 2 + 12, y, 88, 20, new TranslatableText("creative_library.button.save"), _button -> saveLibrary()));
         }
 
         this.libraryName = new TextFieldWidget(this.textRenderer, this.width / 2 - 100, 48, 200, 20, null);
         this.libraryName.setChangedListener(this::updateButtonStatus);
         if (!newLibrary)
             this.libraryName.setText(library.name);
-        this.children.add(this.libraryName);
+        this.addSelectableChild(this.libraryName);
         this.setInitialFocus(this.libraryName);
 
-        this.addButton(new ButtonWidget(this.width / 2, 78, 100, 20, booleanText(tieToServer), button -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2, 78, 100, 20, booleanText(tieToServer), button -> {
             tieToServer = !tieToServer;
             position.update();
             button.setMessage(booleanText(tieToServer));
         }));
 
         int offset = newLibrary ? 0 : 1;
-        this.position = this.addButton(PositionSliderWidget.create(this.width / 2, 103, 100,
+        this.position = this.addDrawableChild(PositionSliderWidget.create(this.width / 2, 103, 100,
                 () -> tieToServer ? LibrarySet.server.libraries.size() - offset: LibrarySet.universal.libraries.size() - offset));
 
-        this.addButton(new ButtonWidget(this.width / 2 + 5, 158, 95, 20, hotbarText(), button -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 5, 158, 95, 20, hotbarText(), button -> {
             if (hotbarOverride == null)
                 hotbarOverride = PrimaryLibrary.UNIVERSAL;
             else if (hotbarOverride == PrimaryLibrary.UNIVERSAL)

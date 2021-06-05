@@ -30,12 +30,11 @@ public class CreativeLibrary implements ClientModInitializer {
 	}
 
 	public static String serverTerm() {
-		switch (LibrarySet.server.serverType) {
-			case WORLD: return I18n.translate("creative_library.world");
-			case SERVER: return I18n.translate("creative_library.server");
-			case REALM: return I18n.translate("creative_library.realm");
-		}
-		return null;
+		return switch (LibrarySet.server.serverType) {
+			case WORLD -> I18n.translate("creative_library.world");
+			case SERVER -> I18n.translate("creative_library.server");
+			case REALM -> I18n.translate("creative_library.realm");
+		};
 	}
 
 }

@@ -7,7 +7,7 @@ import com.minenash.creative_library.config.Config;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
-import net.minecraft.client.options.HotbarStorageEntry;
+import net.minecraft.client.option.HotbarStorageEntry;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemGroup;
@@ -35,7 +35,7 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 		return selectedTab < ItemGroup.GROUPS.length ? selectedTab : 0;
 	}
 
-	@Redirect(method = "setSelectedTab", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/options/HotbarStorageEntry;isEmpty()Z"))
+	@Redirect(method = "setSelectedTab", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/option/HotbarStorageEntry;isEmpty()Z"))
 	private boolean creativeLibrary$doNotDisplayEmptyHotbarThing(HotbarStorageEntry entry) {
 		return !modifyTab() && entry.isEmpty();
 	}

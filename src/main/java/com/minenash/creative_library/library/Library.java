@@ -4,8 +4,8 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.datafixer.DataFixTypes;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtHelper;
 
 import java.util.ArrayList;
@@ -23,24 +23,24 @@ public class Library {
     }
 
 
-    public CompoundTag toTag() {
-        ListTag listTag = new ListTag();
+    public NbtCompound toTag() {
+        NbtList listTag = new NbtList();
         for(ItemStack stack : items)
-            listTag.add(stack.toTag(new CompoundTag()));
+            listTag.add(stack.writeNbt(new NbtCompound()));
 
-        CompoundTag rootTag = new CompoundTag();
+        NbtCompound rootTag = new NbtCompound();
         rootTag.putString("name", name);
         rootTag.put("0", listTag);
 
         return rootTag;
     }
 
-    public static Library fromTag(CompoundTag tag, int dataVersion, LibrarySet set) {
+    public static Library fromTag(NbtCompound tag, int dataVersion, LibrarySet set) {
         Library library = new Library(tag.contains("name") ? tag.getString("name") : I18n.translate("creative_library.library"));
 
-        ListTag listTag = NbtHelper.update(MinecraftClient.getInstance().getDataFixer(), DataFixTypes.HOTBAR, tag, dataVersion).getList("0", 10);
+        NbtList listTag = NbtHelper.update(MinecraftClient.getInstance().getDataFixer(), DataFixTypes.HOTBAR, tag, dataVersion).getList("0", 10);
         for(int i = 0; i < listTag.size(); ++i)
-            library.items.add(ItemStack.fromTag(listTag.getCompound(i)));
+            library.items.add(ItemStack.fromNbt(listTag.getCompound(i)));
 
         library.set = set;
         return library;

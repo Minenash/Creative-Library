@@ -39,7 +39,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
     private final Screen previousScreen;
 
     public LibraryContentScreen(Screen previousScreen, PlayerEntity player, Library library) {
-        super(new LibraryContentScreen.CreativeScreenHandler(player, library), player.inventory, LiteralText.EMPTY);
+        super(new LibraryContentScreen.CreativeScreenHandler(player, library), player.getInventory(), LiteralText.EMPTY);
         player.currentScreenHandler = this.handler;
         this.passEvents = true;
         this.backgroundHeight = 223;
@@ -60,7 +60,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
 
     public void removed() {
         super.removed();
-        if (this.client.player != null && this.client.player.inventory != null)
+        if (this.client.player != null && this.client.player.getInventory() != null)
             this.client.player.playerScreenHandler.removeListener(this.listener);
     }
 
@@ -79,7 +79,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
 
         boolean isLibrarySlot = slot != null && slot.inventory == handler.inventory;
         ItemStack slotStack   = slot != null ? slot.getStack() : null;
-        ItemStack cursorStack = playerInventory.getCursorStack();
+        ItemStack cursorStack = handler.getCursorStack();
 
         if (actionType == SlotActionType.QUICK_CRAFT && invSlot == -999)
             super.onMouseClick(slot, invSlot, clickData, actionType);
@@ -102,15 +102,15 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
             }
             else if (cursorItemIsAFAAAAAKE || cursorStack.isEmpty()) {
                 slot.setStack(cursorStack);
-                playerInventory.setCursorStack(slotStack);
-                cursorItemIsAFAAAAAKE = !playerInventory.getCursorStack().isEmpty();
+                handler.setCursorStack(slotStack);
+                cursorItemIsAFAAAAAKE = !handler.getCursorStack().isEmpty();
             }
             else
                 slot.setStack(cursorStack.copy());
         }
 
         else if (actionType == SlotActionType.CLONE) {
-            playerInventory.setCursorStack(slotStack);
+            handler.setCursorStack(slotStack);
             cursorItemIsAFAAAAAKE = true;
         }
 
@@ -127,17 +127,16 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
     }
 
     private void onPickupAll(@Nullable Slot slot, boolean leftClick) {
-        ItemStack cursorStack = playerInventory.getCursorStack();
-        PlayerEntity player = playerInventory.player;
+        ItemStack cursorStack = handler.getCursorStack();
 
-        if (!cursorStack.isEmpty() && (slot == null || !slot.hasStack() || !slot.canTakeItems(player))) {
+        if (!cursorStack.isEmpty() && (slot == null || !slot.hasStack() || !slot.canTakeItems(client.player))) {
             int l = leftClick ? 54 : handler.slots.size() - 1;
             int q = leftClick ? 1 : -1;
 
             for(int w = 0; w < 2; ++w) {
                 for(int x = l; x >= 54 && x < handler.slots.size() && cursorStack.getCount() < cursorStack.getMaxCount(); x += q) {
                     Slot slot9 = handler.slots.get(x);
-                    if (slot9.hasStack() && ScreenHandler.canInsertItemIntoSlot(slot9, cursorStack, true) && slot9.canTakeItems(player) && handler.canInsertIntoSlot(cursorStack, slot9)) {
+                    if (slot9.hasStack() && ScreenHandler.canInsertItemIntoSlot(slot9, cursorStack, true) && slot9.canTakeItems(client.player) && handler.canInsertIntoSlot(cursorStack, slot9)) {
                         ItemStack itemStack14 = slot9.getStack();
                         if (w != 0 || itemStack14.getCount() != itemStack14.getMaxCount()) {
                             int n = Math.min(cursorStack.getMaxCount() - cursorStack.getCount(), itemStack14.getCount());
@@ -145,7 +144,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
                             cursorStack.increment(n);
                             if (itemStack15.isEmpty())
                                 slot9.setStack(ItemStack.EMPTY);
-                            slot9.onTakeItem(player, itemStack15);
+                            slot9.onTakeItem(client.player, itemStack15);
                         }
                     }
                 }
@@ -212,7 +211,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
         this.renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
 
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
@@ -224,8 +223,8 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
     }
 
     protected void drawBackground(MatrixStack matrices, float delta, int mouseX, int mouseY) {
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, 1.0F);
-        this.client.getTextureManager().bindTexture(INV_TEXTURE);
+        RenderSystem.setShaderTexture(0, INV_TEXTURE);
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
         this.drawTexture(matrices, this.x, this.y, 0, 0, this.backgroundWidth, this.backgroundHeight);
 
         int i = this.x + 175;
@@ -248,7 +247,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
 
         public CreativeScreenHandler(PlayerEntity playerEntity, Library library) {
             super(null, 987456);
-            PlayerInventory playerInv = playerEntity.inventory;
+            PlayerInventory playerInv = playerEntity.getInventory();
             inventory = new SimpleInventory(54);
             inventory.onOpen(playerEntity);
             this.library = library;
@@ -316,7 +315,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
 
             int row = getRow();
 
-            while (itemList.subList(itemList.size()-36, itemList.size()).equals(FOUR_EMPTY_ROWS))
+            while (itemList.subList(Math.max(0,itemList.size()-36), itemList.size()).equals(FOUR_EMPTY_ROWS))
                 itemList = itemList.subList(0, Math.max(0, itemList.size() - 9));
 
             while (!itemList.subList(itemList.size()-27, itemList.size()).equals(THREE_EMPTY_ROWS))

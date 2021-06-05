@@ -4,10 +4,11 @@ import com.minenash.creative_library.DynamicItemGroups;
 import com.minenash.creative_library.config.Config;
 import com.minenash.creative_library.config.Config.PrimaryLibrary;
 import net.minecraft.SharedConstants;
+import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtIo;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,7 +42,7 @@ public class LibrarySet {
         this.loaded = true;
 
         try {
-            CompoundTag rootTag = NbtIo.read(file);
+            NbtCompound rootTag = NbtIo.read(file);
             if (rootTag == null)
                 return;
 
@@ -57,7 +58,7 @@ public class LibrarySet {
             if (rootTag.contains("0"))
                 this.libraries.add(Library.fromTag(rootTag, dataVersion, this));
             else {
-                ListTag libraries = rootTag.getList("libraries", 10);
+                NbtList libraries = rootTag.getList("libraries", 10);
                 for (int i = 0; i < libraries.size(); i++)
                     this.libraries.add(Library.fromTag(libraries.getCompound(i), dataVersion, this));
             }
@@ -76,11 +77,11 @@ public class LibrarySet {
         if (libraries.isEmpty() && !file.exists())
             return;
 
-        ListTag libraries = new ListTag();
+        NbtList libraries = new NbtList();
         for (Library library : this.libraries)
             libraries.add(library.toTag());
 
-        CompoundTag rootTag = new CompoundTag();
+        NbtCompound rootTag = new NbtCompound();
         rootTag.putInt("DataVersion", SharedConstants.getGameVersion().getWorldVersion());
         rootTag.put("libraries", libraries);
 
@@ -139,8 +140,8 @@ public class LibrarySet {
             LibrarySet.loadUniversal();
     }
 
-    public static void loadServer(String address, int port) {
-        LibrarySet.server.load("servers/" + address + "_" + port + ".nbt");
+    public static void loadServer(ServerAddress address) {
+        LibrarySet.server.load("servers/" + address.getAddress() + ".nbt");
         LibrarySet.server.serverType = ServerType.SERVER;
         if (!LibrarySet.universal.loaded)
             LibrarySet.loadUniversal();

@@ -28,8 +28,8 @@ public class ConfirmLibraryDeleteScreen extends Screen {
         this.client.keyboard.setRepeatEvents(true);
 
         int y = this.height / 4 + 144 + 5;
-        this.addButton(new ButtonWidget(this.width / 2 - 100, y, 88, 20, new TranslatableText("creative_library.button.cancel"), _button -> onClose()));
-        this.addButton(new ButtonWidget(this.width / 2 + 12, y, 88, 20, new TranslatableText("creative_library.button.delete"), _button -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, y, 88, 20, new TranslatableText("creative_library.button.cancel"), _button -> onClose()));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 12, y, 88, 20, new TranslatableText("creative_library.button.delete"), _button -> {
             library.set.libraries.remove(library);
             library.set.save();
 
@@ -45,7 +45,7 @@ public class ConfirmLibraryDeleteScreen extends Screen {
         this.renderBackground(matrices);
 
         drawCenteredText(matrices, textRenderer, title, width / 2, 15, 16777215);
-        drawCenteredString(matrices, textRenderer, "Are you sure you want to delete the library?", width / 2, 108, 16777215);
+        drawCenteredText(matrices, textRenderer, new TranslatableText("creative_library.screen.confirm_delete.confirm_delete"), width / 2, 108, 16777215);
 
         super.render(matrices, mouseX, mouseY, delta);
     }

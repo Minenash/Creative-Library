@@ -4,6 +4,7 @@ import com.minenash.creative_library.config.Config;
 import com.minenash.creative_library.library.Library;
 import com.minenash.creative_library.library.LibraryItemGroup;
 import com.minenash.creative_library.library.LibrarySet;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
@@ -26,7 +27,7 @@ public class CreativeInventoryScreenMixinCallback {
         if (selectedTab != -1 && !modifyTab(selectedTab))
             return;
 
-        MinecraftClient.getInstance().getTextureManager().bindTexture(EDIT_BUTTON_TEXTURE);
+        RenderSystem.setShaderTexture(0, EDIT_BUTTON_TEXTURE);
 
         screen.drawTexture(matrices, x + 147, y + 4, 256 - 12, ADD_BUTTON.isIn(x,y,mouseX,mouseY) ? 30 : 18, 12, 12);
         screen.drawTexture(matrices, x + 161, y + 4, 256 - 12, CLONE_BUTTON.isIn(x,y,mouseX,mouseY) ? 78 : 66, 12, 12);
