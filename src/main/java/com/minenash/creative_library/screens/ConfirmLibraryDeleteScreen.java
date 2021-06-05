@@ -45,7 +45,7 @@ public class ConfirmLibraryDeleteScreen extends Screen {
         this.renderBackground(matrices);
 
         drawCenteredText(matrices, textRenderer, title, width / 2, 15, 16777215);
-        drawCenteredString(matrices, textRenderer, "Are you sure you want to delete the library?", width / 2, 108, 16777215);
+        drawCenteredText(matrices, textRenderer, new TranslatableText("creative_library.screen.confirm_delete.confirm_delete"), width / 2, 108, 16777215);
 
         super.render(matrices, mouseX, mouseY, delta);
     }
