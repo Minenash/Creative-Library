@@ -4,7 +4,6 @@ import com.minenash.creative_library.CreativeInventoryScreenDuck;
 import com.minenash.creative_library.library.LibraryItemGroup;
 import com.minenash.creative_library.screens.CreativeInventoryScreenMixinCallback;
 import com.minenash.creative_library.config.Config;
-import net.fabricmc.fabric.impl.item.group.CreativeGuiExtensions;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;

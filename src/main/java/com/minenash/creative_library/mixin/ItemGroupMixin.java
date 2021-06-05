@@ -23,8 +23,8 @@ import java.util.stream.Collectors;
 @Mixin(ItemGroup.class)
 public class ItemGroupMixin implements DynamicItemGroups {
 
-    @Mutable
-    @Shadow @Final public static ItemGroup[] GROUPS;
+    @Mutable @Shadow @Final public static ItemGroup[] GROUPS;
+    @Mutable @Shadow @Final private int index;
 
     @Inject(method = "getTranslationKey", at = @At("RETURN"), cancellable = true)
     private void creativeLibrary$changeHotBarTranslationKey(CallbackInfoReturnable<Text> info) {
@@ -41,9 +41,19 @@ public class ItemGroupMixin implements DynamicItemGroups {
         int hotbarAdjuster = Config.replaceHotBarWithPrimaryLibrary && LibrarySet.getMain() != null? 1 : 0;
         GROUPS = new ItemGroup[original.size() + LibrarySet.universal.libraries.size() + LibrarySet.server.libraries.size() - hotbarAdjuster];
 
-        for (int i = 0; i < 12; i++)
-            GROUPS[i] = original.get(i);
+        if (Config.libraryTabPositions == Config.LibraryTabPositions.BEFORE)
+            creativeLibrary$putLibraryTabsBefore(original);
+        else
+            creativeLibrary$putLibraryTabsAfter(original);
 
+        System.out.println(Arrays.toString(GROUPS));
+    }
+
+    private void creativeLibrary$putLibraryTabsBefore(List<ItemGroup> original) {
+        for (int i = 0; i < 12; i++) {
+            GROUPS[i] = original.get(i);
+            ((DynamicItemGroups) GROUPS[i]).creativeLibrary$setIndex(i);
+        }
         int i = 12;
         for (Library library : LibrarySet.universal.libraries)
             if (!(Config.replaceHotBarWithPrimaryLibrary && library == LibrarySet.getMain()))
@@ -55,9 +65,32 @@ public class ItemGroupMixin implements DynamicItemGroups {
                     new LibraryItemGroup(library, i++);
 
         if (original.size() > 12)
-            for (int j = 12; j < original.size(); j++)
-                GROUPS[i++] = original.get(j);
+            for (int j = 12; j < original.size(); j++) {
+                GROUPS[i] = original.get(j);
+                ((DynamicItemGroups) GROUPS[i]).creativeLibrary$setIndex(i);
+                i++;
+            }
+    }
 
-        System.out.println(Arrays.toString(GROUPS));
+    private void creativeLibrary$putLibraryTabsAfter(List<ItemGroup> original) {
+        int i = 0;
+        for (ItemGroup itemGroup : original) {
+            GROUPS[i] = itemGroup;
+            ((DynamicItemGroups) GROUPS[i]).creativeLibrary$setIndex(i);
+            i++;
+        }
+        for (Library library : LibrarySet.universal.libraries)
+            if (!(Config.replaceHotBarWithPrimaryLibrary && library == LibrarySet.getMain()))
+                new LibraryItemGroup(library, i++);
+
+        if (LibrarySet.server.loaded)
+            for (Library library : LibrarySet.server.libraries)
+                if (!(Config.replaceHotBarWithPrimaryLibrary && library == LibrarySet.getMain()))
+                    new LibraryItemGroup(library, i++);
+    }
+
+    @Override
+    public void creativeLibrary$setIndex(int index) {
+        this.index = index;
     }
 }

@@ -135,11 +135,15 @@ public class LibrarySet {
     public static void loadWorld(String worldName) {
         LibrarySet.server.load("singleplayer/" + worldName + ".nbt");
         LibrarySet.server.serverType = ServerType.WORLD;
+        if (!LibrarySet.universal.loaded)
+            LibrarySet.loadUniversal();
     }
 
     public static void loadServer(String address, int port) {
         LibrarySet.server.load("servers/" + address + "_" + port + ".nbt");
         LibrarySet.server.serverType = ServerType.SERVER;
+        if (!LibrarySet.universal.loaded)
+            LibrarySet.loadUniversal();
     }
 
     private static final Pattern RESERVED_FILENAMES_PATTERN = Pattern.compile(".*\\.|(?:COM|CLOCK\\$|CON|PRN|AUX|NUL|COM[1-9]|LPT[1-9])(?:\\..*)?", Pattern.CASE_INSENSITIVE);
@@ -155,6 +159,8 @@ public class LibrarySet {
 
         LibrarySet.server.load("realms/" + realmName + ".nbt");
         LibrarySet.server.serverType = ServerType.REALM;
+        if (!LibrarySet.universal.loaded)
+            LibrarySet.loadUniversal();
     }
 
 }

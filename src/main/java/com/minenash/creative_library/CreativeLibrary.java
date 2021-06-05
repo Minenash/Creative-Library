@@ -17,7 +17,6 @@ public class CreativeLibrary implements ClientModInitializer {
 	public void onInitializeClient() {
 
 		Config.init("creative_library", Config.class);
-		LibrarySet.loadUniversal();
 
 		try {
 			Path path = FabricLoader.getInstance().getConfigDir().resolve("creative_library");

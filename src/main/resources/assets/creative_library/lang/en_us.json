@@ -5,8 +5,11 @@
   "creative_library.tinyconfig.title": "Creative Library",
   "creative_library.tinyconfig.replaceHotBarWithPrimaryLibrary": "Replace Hotbar Tab with Primary Library Tab",
   "creative_library.tinyconfig.primaryLibraryTab": "Primary Library Tab",
+  "creative_library.tinyconfig.libraryTabPositions": "Show Library Tabs Before or After Tabs Created by Mods",
   "creative_library.tinyconfig.enum.PrimaryLibrary.UNIVERSAL": "Universal",
-  "creative_library.tinyconfig.enum.PrimaryLibrary.SERVER": "Server",
+  "creative_library.tinyconfig.enum.LibraryTabPositions.SERVER": "Server",
+  "creative_library.tinyconfig.enum.LibraryTabPositions.BEFORE": "Before",
+  "creative_library.tinyconfig.enum.LibraryTabPositions.AFTER": "After",
   "creative_library.tinyconfig.boolean.true": "§aYes",
   "creative_library.tinyconfig.boolean.false": "§cNo",
 
