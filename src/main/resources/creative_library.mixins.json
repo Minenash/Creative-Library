@@ -11,7 +11,8 @@
     "server_identifiers.ConnectScreenMixin",
     "server_identifiers.LevelStorageMixin",
     "server_identifiers.RealmsMainScreenMixin",
-    "server_identifiers.WorldListWidgetMixin"
+    "server_identifiers.WorldListWidgetMixin",
+    "server_identifiers.CreateWorldScreenMixin"
   ],
   "plugin": "com.minenash.creative_library.mixin.creative_screen.CreativeInventoryScreenMixinPlugin",
   "injectors": {

@@ -48,8 +48,8 @@ public class LibrarySet {
 
             if (rootTag.contains("primaryLibraryOverride")) {
                 switch (rootTag.getString("primaryLibraryOverride")) {
-                    case "universal": primaryLibraryOverride = PrimaryLibrary.UNIVERSAL;
-                    case "server": primaryLibraryOverride = PrimaryLibrary.SERVER;
+                    case "universal" -> primaryLibraryOverride = PrimaryLibrary.UNIVERSAL;
+                    case "server" -> primaryLibraryOverride = PrimaryLibrary.SERVER;
                 }
             }
 
@@ -136,8 +136,9 @@ public class LibrarySet {
     public static void loadWorld(String worldName) {
         LibrarySet.server.load("singleplayer/" + worldName + ".nbt");
         LibrarySet.server.serverType = ServerType.WORLD;
-        if (!LibrarySet.universal.loaded)
+        if (!LibrarySet.universal.loaded) {
             LibrarySet.loadUniversal();
+        }
     }
 
     public static void loadServer(ServerAddress address) {
