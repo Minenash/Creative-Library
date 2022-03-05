@@ -54,7 +54,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
             this.listener = new CreativeInventoryListener(this.client);
             this.client.player.playerScreenHandler.addListener(this.listener);
         } else
-            this.client.openScreen(new InventoryScreen(this.client.player));
+            this.client.setScreen(new InventoryScreen(this.client.player));
 
     }
 
@@ -65,13 +65,14 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
     }
 
     public void onClose() {
-        this.client.openScreen(previousScreen);
+        this.client.setScreen(previousScreen);
     }
 
-    public void tick() {
-        if (!this.client.interactionManager.hasCreativeInventory())
-            this.client.openScreen(new InventoryScreen(this.client.player));
-    }
+    //TODO: figure this out
+//    public void tick() {
+//        if (!this.client.interactionManager.hasCreativeInventory())
+//            this.client.setScreen(new InventoryScreen(this.client.player));
+//    }
 
     private boolean cursorItemIsAFAAAAAKE = false;
     protected void onMouseClick(@Nullable Slot slot, int invSlot, int clickData, SlotActionType actionType) {
@@ -162,13 +163,13 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
             this.scrolling = true;
 
         else if (ADD_BUTTON.isIn(x,y,mouseX,mouseY))
-            client.openScreen(EditLibraryScreen.create(this));
+            client.setScreen(EditLibraryScreen.create(this));
 
         else if (CLONE_BUTTON.isIn(x,y,mouseX,mouseY))
-            client.openScreen(EditLibraryScreen.clone(this, handler.library));
+            client.setScreen(EditLibraryScreen.clone(this, handler.library));
 
         else if (SETTINGS_BUTTON.isIn(x,y,mouseX,mouseY))
-            client.openScreen(EditLibraryScreen.edit(this, handler.library));
+            client.setScreen(EditLibraryScreen.edit(this, handler.library));
         else
             return super.mouseClicked(mouseX, mouseY, button);
 

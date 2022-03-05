@@ -56,16 +56,16 @@ public class CreativeInventoryScreenMixinCallback {
         System.out.println(library);
 
         if (EDIT_BUTTON.isIn(x,y,mouseX,mouseY))
-            client.openScreen(new LibraryContentScreen(screen, client.player, library));
+            client.setScreen(new LibraryContentScreen(screen, client.player, library));
 
         else if (ADD_BUTTON.isIn(x,y,mouseX,mouseY))
-            client.openScreen(EditLibraryScreen.create(screen));
+            client.setScreen(EditLibraryScreen.create(screen));
 
         else if (CLONE_BUTTON.isIn(x,y,mouseX,mouseY))
-            client.openScreen(EditLibraryScreen.clone(screen, library));
+            client.setScreen(EditLibraryScreen.clone(screen, library));
 
         else if (SETTINGS_BUTTON.isIn(x,y,mouseX,mouseY))
-            client.openScreen(EditLibraryScreen.edit(screen, library));
+            client.setScreen(EditLibraryScreen.edit(screen, library));
 
         else
             return;

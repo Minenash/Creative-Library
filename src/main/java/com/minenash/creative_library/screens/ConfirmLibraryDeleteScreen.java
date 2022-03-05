@@ -36,7 +36,7 @@ public class ConfirmLibraryDeleteScreen extends Screen {
             CreativeInventoryScreen screen = new CreativeInventoryScreen(client.player);
             if ( ItemGroup.GROUPS.length % 9 == 3)
                 ((CreativeGuiExtensions) screen).fabric_previousPage();
-            this.client.openScreen(screen);
+            this.client.setScreen(screen);
         }));
 
     }
@@ -51,7 +51,7 @@ public class ConfirmLibraryDeleteScreen extends Screen {
     }
 
     public void onClose() {
-        this.client.openScreen(previousScreen);
+        this.client.setScreen(previousScreen);
     }
 
 }

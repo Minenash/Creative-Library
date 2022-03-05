@@ -160,7 +160,7 @@ public class EditLibraryScreen extends Screen {
         if (set != LibrarySet.server)
             LibrarySet.server.save();
 
-        this.client.openScreen(new LibraryContentScreen(previousScreen, client.player, library));
+        this.client.setScreen(new LibraryContentScreen(previousScreen, client.player, library));
     }
 
     private void saveLibrary() {
@@ -185,11 +185,11 @@ public class EditLibraryScreen extends Screen {
     }
 
     private void delete() {
-        this.client.openScreen(new ConfirmLibraryDeleteScreen(this, library));
+        this.client.setScreen(new ConfirmLibraryDeleteScreen(this, library));
     }
 
     public void onClose() {
-        this.client.openScreen(previousScreen);
+        this.client.setScreen(previousScreen);
     }
 
     @Override

@@ -26,7 +26,7 @@ public class ItemGroupMixin implements DynamicItemGroups {
     @Mutable @Shadow @Final public static ItemGroup[] GROUPS;
     @Mutable @Shadow @Final private int index;
 
-    @Inject(method = "getTranslationKey", at = @At("RETURN"), cancellable = true)
+    @Inject(method = "getDisplayName", at = @At("RETURN"), cancellable = true)
     private void creativeLibrary$changeHotBarTranslationKey(CallbackInfoReturnable<Text> info) {
         if (Config.replaceHotBarWithPrimaryLibrary && (Object)this == ItemGroup.HOTBAR)
             info.setReturnValue( new LiteralText(LibrarySet.getMain().name));

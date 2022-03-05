@@ -20,7 +20,7 @@ public class LibraryItemGroup extends ItemGroup {
 
     @Override
     @Environment(EnvType.CLIENT)
-    public Text getTranslationKey() {
+    public Text getDisplayName() {
         return new LiteralText(library.name);
     }
 
