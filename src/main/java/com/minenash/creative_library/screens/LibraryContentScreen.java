@@ -303,7 +303,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
 
         public void addStack(ItemStack stack) {
             int index = itemList.size() - 1;
-            while (itemList.get(index).isEmpty())
+            while (index > -1 && itemList.get(index).isEmpty())
                 index--;
 
             itemList.set(++index, stack);
