@@ -12,6 +12,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.collection.DefaultedList;
@@ -20,6 +21,8 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Collection;
 
 @Mixin(value = CreativeInventoryScreen.class)
 public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScreen<CreativeInventoryScreen.CreativeScreenHandler> implements CreativeInventoryScreenDuck {
@@ -75,6 +78,14 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 		else
 			itemGroup.appendStacks(items);
 
+	}
+
+	@Redirect(method = "setSelectedTab", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/collection/DefaultedList;addAll(Ljava/util/Collection;)Z", ordinal = 1))
+	private boolean creativeLibrary$setSlots(DefaultedList<Slot> instance, Collection<Slot> collection) {
+		assert this.client != null;
+		assert this.client.player != null;
+		instance.addAll(new CreativeInventoryScreen.CreativeScreenHandler(this.client.player).slots);
+		return false;
 	}
 
 	private static boolean modifyTab() {
