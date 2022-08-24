@@ -6,7 +6,7 @@ import com.minenash.creative_library.library.Library;
 import com.minenash.creative_library.library.LibraryItemGroup;
 import com.minenash.creative_library.library.LibrarySet;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,7 +29,7 @@ public class ItemGroupMixin implements DynamicItemGroups {
     @Inject(method = "getDisplayName", at = @At("RETURN"), cancellable = true)
     private void creativeLibrary$changeHotBarTranslationKey(CallbackInfoReturnable<Text> info) {
         if (Config.replaceHotBarWithPrimaryLibrary && (Object)this == ItemGroup.HOTBAR)
-            info.setReturnValue( new LiteralText(LibrarySet.getMain().name));
+            info.setReturnValue( Text.literal(LibrarySet.getMain().name));
     }
 
     @Override

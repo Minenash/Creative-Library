@@ -9,9 +9,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 
 public class EditLibraryScreen extends Screen {
 
@@ -40,7 +40,7 @@ public class EditLibraryScreen extends Screen {
     }
 
     public EditLibraryScreen(Screen previousScreen, String title, Library library, boolean newLibrary) {
-        super(new TranslatableText("creative_library.screen." + title + ".title", !newLibrary ? library.name : ""));
+        super(Text.translatable("creative_library.screen." + title + ".title", !newLibrary ? library.name : ""));
         this.previousScreen = previousScreen;
         this.library = library;
         this.newLibrary = newLibrary;
@@ -59,13 +59,13 @@ public class EditLibraryScreen extends Screen {
 
         int y = this.height / 4 + 144 + 5;
         if (newLibrary) {
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, y, 98, 20, new TranslatableText("creative_library.button.cancel"), _button -> onClose()));
-            createSaveButton = this.addDrawableChild(new ButtonWidget(this.width / 2, y, 98, 20, new TranslatableText("creative_library.button.create"), _button -> createLibrary()));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, y, 98, 20, Text.translatable("creative_library.button.cancel"), _button -> close()));
+            createSaveButton = this.addDrawableChild(new ButtonWidget(this.width / 2, y, 98, 20, Text.translatable("creative_library.button.create"), _button -> createLibrary()));
         }
         else {
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, y, 88, 20, new TranslatableText("creative_library.button.cancel"), _button -> onClose()));
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 10, y, 20, 20, new TranslatableText("creative_library.button.delete_short"), _button -> delete()));
-            createSaveButton = this.addDrawableChild(new ButtonWidget(this.width / 2 + 12, y, 88, 20, new TranslatableText("creative_library.button.save"), _button -> saveLibrary()));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, y, 88, 20, Text.translatable("creative_library.button.cancel"), _button -> close()));
+            this.addDrawableChild(new ButtonWidget(this.width / 2 - 10, y, 20, 20, Text.translatable("creative_library.button.delete_short"), _button -> delete()));
+            createSaveButton = this.addDrawableChild(new ButtonWidget(this.width / 2 + 12, y, 88, 20, Text.translatable("creative_library.button.save"), _button -> saveLibrary()));
         }
 
         this.libraryName = new TextFieldWidget(this.textRenderer, this.width / 2 - 100, 48, 200, 20, null);
@@ -101,16 +101,16 @@ public class EditLibraryScreen extends Screen {
     }
 
     private Text booleanText(boolean bool) {
-        return bool ? new TranslatableText("creative_library.tinyconfig.boolean.true") :
-                      new TranslatableText("creative_library.tinyconfig.boolean.false");
+        return bool ? Text.translatable("creative_library.tinyconfig.boolean.true") :
+                      Text.translatable("creative_library.tinyconfig.boolean.false");
     }
 
     private Text hotbarText() {
         if (hotbarOverride == null)
-            return new TranslatableText("creative_library.default");
+            return Text.translatable("creative_library.default");
         switch (hotbarOverride) {
-            case UNIVERSAL: return new TranslatableText("creative_library.universal");
-            case SERVER: return new LiteralText(CreativeLibrary.serverTerm());
+            case UNIVERSAL: return Text.translatable("creative_library.universal");
+            case SERVER: return Text.translatable(CreativeLibrary.serverTerm());
         }
         return null;
     }
@@ -133,13 +133,13 @@ public class EditLibraryScreen extends Screen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 15, 16777215);
-        drawTextWithShadow(matrices, this.textRenderer, new TranslatableText("creative_library.screen.options.name_field"), this.width / 2 - 100, 34, 10526880);
+        drawTextWithShadow(matrices, this.textRenderer, Text.translatable("creative_library.screen.options.name_field"), this.width / 2 - 100, 34, 10526880);
 
-        drawTextWithShadow(matrices, textRenderer, new TranslatableText("creative_library.screen.options.tie_to_server", CreativeLibrary.serverTerm()), width / 2 - 100, 83, 16777215);
-        drawTextWithShadow(matrices, textRenderer, new TranslatableText("creative_library.screen.options.position"), width / 2 - 100, 108, 16777215);
-        drawCenteredText(matrices, textRenderer, new TranslatableText("creative_library.screen.options.sever_settings", CreativeLibrary.serverTerm()), width / 2, 133, 16777215);
-        drawTextWithShadow(matrices, textRenderer, new TranslatableText("creative_library.screen.options.primary_library_tab.line_1"), width / 2 - 100, 158, 16777215);
-        drawTextWithShadow(matrices, textRenderer, new TranslatableText("creative_library.screen.options.primary_library_tab.line_2"), width / 2 - 100, 168, 16777215);
+        drawTextWithShadow(matrices, textRenderer, Text.translatable("creative_library.screen.options.tie_to_server", CreativeLibrary.serverTerm()), width / 2 - 100, 83, 16777215);
+        drawTextWithShadow(matrices, textRenderer, Text.translatable("creative_library.screen.options.position"), width / 2 - 100, 108, 16777215);
+        drawCenteredText(matrices, textRenderer, Text.translatable("creative_library.screen.options.sever_settings", CreativeLibrary.serverTerm()), width / 2, 133, 16777215);
+        drawTextWithShadow(matrices, textRenderer, Text.translatable("creative_library.screen.options.primary_library_tab.line_1"), width / 2 - 100, 158, 16777215);
+        drawTextWithShadow(matrices, textRenderer, Text.translatable("creative_library.screen.options.primary_library_tab.line_2"), width / 2 - 100, 168, 16777215);
 
         this.libraryName.render(matrices, mouseX, mouseY, delta);
         super.render(matrices, mouseX, mouseY, delta);
@@ -181,14 +181,14 @@ public class EditLibraryScreen extends Screen {
         LibrarySet.server.save();
         LibrarySet.universal.save();
 
-        onClose();
+        close();
     }
 
     private void delete() {
         this.client.setScreen(new ConfirmLibraryDeleteScreen(this, library));
     }
 
-    public void onClose() {
+    public void close() {
         this.client.setScreen(previousScreen);
     }
 
