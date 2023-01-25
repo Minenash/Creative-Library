@@ -9,8 +9,9 @@ import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.text.LiteralText;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.LiteralTextContent;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 
 public class ConfirmLibraryDeleteScreen extends Screen {
 
@@ -18,7 +19,7 @@ public class ConfirmLibraryDeleteScreen extends Screen {
     private final Screen previousScreen;
 
     public ConfirmLibraryDeleteScreen(Screen previousScreen, Library library) {
-        super(new LiteralText("'" + library.name + "' Settings" ));
+        super(Text.literal("'" + library.name + "' Settings"));
         this.library = library;
         this.previousScreen = previousScreen;
     }
@@ -28,8 +29,8 @@ public class ConfirmLibraryDeleteScreen extends Screen {
         this.client.keyboard.setRepeatEvents(true);
 
         int y = this.height / 4 + 144 + 5;
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, y, 88, 20, new TranslatableText("creative_library.button.cancel"), _button -> onClose()));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 12, y, 88, 20, new TranslatableText("creative_library.button.delete"), _button -> {
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, y, 88, 20, Text.translatable("creative_library.button.cancel"), _button -> close()));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 + 12, y, 88, 20, Text.translatable("creative_library.button.delete"), _button -> {
             library.set.libraries.remove(library);
             library.set.save();
 
@@ -45,12 +46,12 @@ public class ConfirmLibraryDeleteScreen extends Screen {
         this.renderBackground(matrices);
 
         drawCenteredText(matrices, textRenderer, title, width / 2, 15, 16777215);
-        drawCenteredText(matrices, textRenderer, new TranslatableText("creative_library.screen.confirm_delete.confirm_delete"), width / 2, 108, 16777215);
+        drawCenteredText(matrices, textRenderer, Text.translatable("creative_library.screen.confirm_delete.confirm_delete"), width / 2, 108, 16777215);
 
         super.render(matrices, mouseX, mouseY, delta);
     }
 
-    public void onClose() {
+    public void close() {
         this.client.setScreen(previousScreen);
     }
 

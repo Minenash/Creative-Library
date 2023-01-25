@@ -5,7 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
 
 
@@ -21,7 +21,7 @@ public class LibraryItemGroup extends ItemGroup {
     @Override
     @Environment(EnvType.CLIENT)
     public Text getDisplayName() {
-        return new LiteralText(library.name);
+        return Text.literal(library.name);
     }
 
     @Override

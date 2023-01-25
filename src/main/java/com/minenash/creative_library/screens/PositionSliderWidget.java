@@ -3,10 +3,9 @@ package com.minenash.creative_library.screens;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.SliderWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
-
+import net.minecraft.text.TranslatableTextContent;
 import java.util.function.Supplier;
 
 public class PositionSliderWidget extends SliderWidget {
@@ -34,10 +33,10 @@ public class PositionSliderWidget extends SliderWidget {
 
     private static Text getText(int position, int max) {
         if (position == 0)
-            return new TranslatableText("creative_library.button.position.first_primary");
+            return Text.translatable("creative_library.button.position.first_primary");
         if (position == max)
-            return new TranslatableText("creative_library.button.position.last");
-        return new LiteralText( Integer.toString(position) );
+            return Text.translatable("creative_library.button.position.last");
+        return Text.literal( Integer.toString(position) );
     }
 
     @Override

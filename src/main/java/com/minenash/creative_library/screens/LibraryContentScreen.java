@@ -21,9 +21,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
 import net.minecraft.screen.slot.SlotActionType;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
@@ -39,7 +39,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
     private final Screen previousScreen;
 
     public LibraryContentScreen(Screen previousScreen, PlayerEntity player, Library library) {
-        super(new LibraryContentScreen.CreativeScreenHandler(player, library), player.getInventory(), LiteralText.EMPTY);
+        super(new LibraryContentScreen.CreativeScreenHandler(player, library), player.getInventory(), Text.empty());
         player.currentScreenHandler = this.handler;
         this.passEvents = true;
         this.backgroundHeight = 223;
@@ -64,7 +64,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
             this.client.player.playerScreenHandler.removeListener(this.listener);
     }
 
-    public void onClose() {
+    public void close() {
         this.client.setScreen(previousScreen);
     }
 
@@ -216,7 +216,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
         this.drawMouseoverTooltip(matrices, mouseX, mouseY);
     }
 
-    private static final Text INV_TEXT = new TranslatableText("container.inventory");
+    private static final Text INV_TEXT = Text.translatable("container.inventory");
     protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
         RenderSystem.disableBlend();
         this.textRenderer.draw(matrices, handler.library.name, 8.0F, 6.0F, 4210752);
@@ -330,6 +330,11 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
 
         public boolean canUse(PlayerEntity player) {
             return this.inventory.canPlayerUse(player);
+        }
+
+        @Override
+        public ItemStack transferSlot(PlayerEntity player, int index) {
+            return player.getInventory().getStack(index);
         }
 
         public void close(PlayerEntity player) {

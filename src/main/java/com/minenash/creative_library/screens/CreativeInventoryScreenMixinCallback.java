@@ -10,7 +10,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.HandledScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.item.ItemGroup;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -35,16 +36,16 @@ public class CreativeInventoryScreenMixinCallback {
 
         if (EDIT_BUTTON.isIn(x,y,mouseX,mouseY)) {
             screen.drawTexture(matrices, x + 172, y + 111, 256 - 18, 0, 18, 18);
-            screen.renderTooltip(matrices, new TranslatableText("creative_library.tooltip.edit_library_contents"), mouseX, mouseY);
+            screen.renderTooltip(matrices, Text.translatable("creative_library.tooltip.edit_library_contents"), mouseX, mouseY);
         }
         else if (ADD_BUTTON.isIn(x,y,mouseX,mouseY))
-            screen.renderTooltip(matrices, new TranslatableText("creative_library.tooltip.create_new_library"), mouseX, mouseY);
+            screen.renderTooltip(matrices, Text.translatable("creative_library.tooltip.create_new_library"), mouseX, mouseY);
 
         else if (CLONE_BUTTON.isIn(x,y,mouseX,mouseY))
-            screen.renderTooltip(matrices, new TranslatableText("creative_library.tooltip.clone_library"), mouseX, mouseY);
+            screen.renderTooltip(matrices, Text.translatable("creative_library.tooltip.clone_library"), mouseX, mouseY);
 
         else if (SETTINGS_BUTTON.isIn(x,y,mouseX,mouseY))
-            screen.renderTooltip(matrices, new TranslatableText("creative_library.tooltip.library_settings"), mouseX, mouseY);
+            screen.renderTooltip(matrices, Text.translatable("creative_library.tooltip.library_settings"), mouseX, mouseY);
     }
 
     public static void onButtonClick(Screen screen, int x, int y, double mouseX, double mouseY, int button, int selectedTab, CallbackInfoReturnable<Boolean> info) {
