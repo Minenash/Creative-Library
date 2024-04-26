@@ -43,8 +43,8 @@
   "creative_library.universal": "Universal",
   "creative_library.default": "Default",
 
-  "creative_library.tooltip.edit_library_contents": "Edit Library Contents",
-  "creative_library.tooltip.create_new_library": "Create New Library",
-  "creative_library.tooltip.clone_library": "Clone Library",
-  "creative_library.tooltip.library_settings": "Library Settings"
+  "creative_library.button.tooltip.edit": "Edit Library Contents",
+  "creative_library.button.tooltip.add": "Create New Library",
+  "creative_library.button.tooltip.clone": "Clone Library",
+  "creative_library.button.tooltip.settings": "Library Settings"
 }

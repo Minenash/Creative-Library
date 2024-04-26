@@ -25,10 +25,10 @@
   "mixins": [
     "creative_library.mixins.json"
   ],
-
+  "accessWidener": "creative_library.accessWidener",
   "depends": {
     "fabricloader": ">=0.12.12",
     "fabric": "*",
-    "minecraft": "1.19.2"
+    "minecraft": "1.19.3"
   }
 }

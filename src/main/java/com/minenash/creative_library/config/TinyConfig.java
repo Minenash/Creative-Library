@@ -2,17 +2,14 @@ package com.minenash.creative_library.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.minenash.creative_library.DynamicItemGroups;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.text.LiteralTextContent;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -27,6 +24,8 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
+
+import static com.minenash.creative_library.CLUtils.buttonRaw;
 
 public class TinyConfig {
 
@@ -161,7 +160,6 @@ public class TinyConfig {
 
     public static void write() {
         try {
-            ((DynamicItemGroups) ItemGroup.BUILDING_BLOCKS).creativeLibrary$setItemGroupLibraries(); // INSERTED LINE, Don't forget to include this when updating TinyConfig
             LOGGER.info(MOD_NAME + ": Saving config.");
             if (!Files.exists(path)) Files.createFile(path);
             Files.write(path, gson.toJson(configClass.newInstance()).getBytes());
@@ -187,8 +185,7 @@ public class TinyConfig {
         protected void init() {
             super.init();
 
-            ButtonWidget done = addDrawableChild(new ButtonWidget(this.width/2 - 100,this.height - 28,200,20,
-                    Text.translatable("gui.done"), (button) -> {
+            ButtonWidget done = addDrawableChild(buttonRaw(Text.translatable("gui.done"), this.width/2 - 100,this.height - 28, 200, 20, button -> {
                 for (EntryInfo info : entries)
                     try { info.field.set(null, info.value); }
                     catch (IllegalAccessException ignore) {}
@@ -200,7 +197,7 @@ public class TinyConfig {
             for (EntryInfo info : entries) {
                 if (info.widget instanceof Map.Entry) {
                     Map.Entry<ButtonWidget.PressAction,Function<Object,Text>> widget = (Map.Entry<ButtonWidget.PressAction, Function<Object, Text>>) info.widget;
-                    addDrawableChild(new ButtonWidget(width-85,y,info.width,20, widget.getValue().apply(info.value), widget.getKey()));
+                    addDrawableChild(buttonRaw(widget.getValue().apply(info.value), width-85, y, info.width, 20, widget.getKey()));
                 }
                 else {
                     TextFieldWidget widget = addDrawableChild(new TextFieldWidget(textRenderer, width-85, y, info.width, 20, null));

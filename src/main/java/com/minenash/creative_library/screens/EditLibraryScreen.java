@@ -1,5 +1,6 @@
 package com.minenash.creative_library.screens;
 
+import com.minenash.creative_library.CLUtils;
 import com.minenash.creative_library.CreativeLibrary;
 import com.minenash.creative_library.config.Config.PrimaryLibrary;
 import com.minenash.creative_library.library.Library;
@@ -12,6 +13,9 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralTextContent;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableTextContent;
+
+import static com.minenash.creative_library.CLUtils.button;
+import static com.minenash.creative_library.CLUtils.buttonRaw;
 
 public class EditLibraryScreen extends Screen {
 
@@ -55,17 +59,16 @@ public class EditLibraryScreen extends Screen {
 
     @Override
     protected void init() {
-        this.client.keyboard.setRepeatEvents(true);
 
         int y = this.height / 4 + 144 + 5;
         if (newLibrary) {
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, y, 98, 20, Text.translatable("creative_library.button.cancel"), _button -> close()));
-            createSaveButton = this.addDrawableChild(new ButtonWidget(this.width / 2, y, 98, 20, Text.translatable("creative_library.button.create"), _button -> createLibrary()));
+            this.addDrawableChild(button("cancel", this.width / 2 - 100, y, 98, 20, _button -> close()));
+            createSaveButton = this.addDrawableChild(button("create", this.width / 2, y, 98, 20, _button -> createLibrary()));
         }
         else {
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, y, 88, 20, Text.translatable("creative_library.button.cancel"), _button -> close()));
-            this.addDrawableChild(new ButtonWidget(this.width / 2 - 10, y, 20, 20, Text.translatable("creative_library.button.delete_short"), _button -> delete()));
-            createSaveButton = this.addDrawableChild(new ButtonWidget(this.width / 2 + 12, y, 88, 20, Text.translatable("creative_library.button.save"), _button -> saveLibrary()));
+            this.addDrawableChild(button("cancel", this.width / 2 - 100, y, 88, 20, _button -> close()));
+            this.addDrawableChild(button("delete_short", this.width / 2 - 10, y, 20, 20, _button -> delete()));
+            createSaveButton = this.addDrawableChild(button("save", this.width / 2 + 12, y, 88, 20, _button -> saveLibrary()));
         }
 
         this.libraryName = new TextFieldWidget(this.textRenderer, this.width / 2 - 100, 48, 200, 20, null);
@@ -75,7 +78,7 @@ public class EditLibraryScreen extends Screen {
         this.addSelectableChild(this.libraryName);
         this.setInitialFocus(this.libraryName);
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2, 78, 100, 20, booleanText(tieToServer), button -> {
+        this.addDrawableChild(buttonRaw(booleanText(tieToServer), this.width / 2, 78, 100, 20, button -> {
             tieToServer = !tieToServer;
             position.update();
             button.setMessage(booleanText(tieToServer));
@@ -85,7 +88,7 @@ public class EditLibraryScreen extends Screen {
         this.position = this.addDrawableChild(PositionSliderWidget.create(this.width / 2, 103, 100,
                 () -> tieToServer ? LibrarySet.server.libraries.size() - offset: LibrarySet.universal.libraries.size() - offset));
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 5, 158, 95, 20, hotbarText(), button -> {
+        this.addDrawableChild(buttonRaw(hotbarText(), this.width / 2 + 5, 158, 95, 20, button -> {
             if (hotbarOverride == null)
                 hotbarOverride = PrimaryLibrary.UNIVERSAL;
             else if (hotbarOverride == PrimaryLibrary.UNIVERSAL)
@@ -108,11 +111,10 @@ public class EditLibraryScreen extends Screen {
     private Text hotbarText() {
         if (hotbarOverride == null)
             return Text.translatable("creative_library.default");
-        switch (hotbarOverride) {
-            case UNIVERSAL: return Text.translatable("creative_library.universal");
-            case SERVER: return Text.translatable(CreativeLibrary.serverTerm());
-        }
-        return null;
+        return switch (hotbarOverride) {
+            case UNIVERSAL -> Text.translatable("creative_library.universal");
+            case SERVER -> Text.translatable(CreativeLibrary.serverTerm());
+        };
     }
 
     public void resize(MinecraftClient client, int width, int height) {
@@ -126,7 +128,6 @@ public class EditLibraryScreen extends Screen {
     }
 
     public void removed() {
-        this.client.keyboard.setRepeatEvents(false);
         PositionSliderWidget.reset();
     }
 

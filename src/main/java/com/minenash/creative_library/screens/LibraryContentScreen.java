@@ -68,12 +68,6 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
         this.client.setScreen(previousScreen);
     }
 
-    //TODO: figure this out
-//    public void tick() {
-//        if (!this.client.interactionManager.hasCreativeInventory())
-//            this.client.setScreen(new InventoryScreen(this.client.player));
-//    }
-
     private boolean cursorItemIsAFAAAAAKE = false;
     protected void onMouseClick(@Nullable Slot slot, int invSlot, int clickData, SlotActionType actionType) {
         //System.out.println("Action: " + actionType + " | click:" + clickData + " | invSlot: " + invSlot);
@@ -162,13 +156,13 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
         if (mouseX >= x + 175 && mouseY >= y + 18 && mouseX < x + 175 + 14 && mouseY < y + 18 + 108)
             this.scrolling = true;
 
-        else if (ADD_BUTTON.isIn(x,y,mouseX,mouseY))
+        else if (ADD_BUTTON.isIn(this,x,y,mouseX,mouseY))
             client.setScreen(EditLibraryScreen.create(this));
 
-        else if (CLONE_BUTTON.isIn(x,y,mouseX,mouseY))
+        else if (CLONE_BUTTON.isIn(this,x,y,mouseX,mouseY))
             client.setScreen(EditLibraryScreen.clone(this, handler.library));
 
-        else if (SETTINGS_BUTTON.isIn(x,y,mouseX,mouseY))
+        else if (SETTINGS_BUTTON.isIn(this,x,y,mouseX,mouseY))
             client.setScreen(EditLibraryScreen.edit(this, handler.library));
         else
             return super.mouseClicked(mouseX, mouseY, button);
@@ -233,7 +227,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
         int k = j + 108;
         this.drawTexture(matrices, i, j + (int)((float)(k - j - 17) * scrollPosition), 232, 0, 12, 15);
 
-        CreativeInventoryScreenMixinCallback.renderButtonsAndTooltips(this, matrices, -1, x, y, mouseX, mouseY);
+        CreativeInventoryScreenMixinCallback.renderButtonsAndTooltips(this, matrices, null, x, y, mouseX, mouseY);
 
     }
 
@@ -333,7 +327,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
         }
 
         @Override
-        public ItemStack transferSlot(PlayerEntity player, int index) {
+        public ItemStack quickMove(PlayerEntity player, int index) {
             return player.getInventory().getStack(index);
         }
 

@@ -1,17 +1,16 @@
 package com.minenash.creative_library.screens;
 
-import com.minenash.creative_library.CreativeInventoryScreenDuck;
+import com.minenash.creative_library.CLUtils;
 import com.minenash.creative_library.library.Library;
-import com.minenash.creative_library.mixin.creative_screen.CreativeInventoryScreenMixin;
-import net.fabricmc.fabric.impl.item.group.CreativeGuiExtensions;
+import net.fabricmc.fabric.impl.client.itemgroup.CreativeGuiExtensions;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.text.LiteralTextContent;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableTextContent;
+
+import static com.minenash.creative_library.CLUtils.button;
 
 public class ConfirmLibraryDeleteScreen extends Screen {
 
@@ -26,16 +25,16 @@ public class ConfirmLibraryDeleteScreen extends Screen {
 
     @Override
     protected void init() {
-        this.client.keyboard.setRepeatEvents(true);
 
         int y = this.height / 4 + 144 + 5;
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, y, 88, 20, Text.translatable("creative_library.button.cancel"), _button -> close()));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 + 12, y, 88, 20, Text.translatable("creative_library.button.delete"), _button -> {
+
+        this.addDrawableChild(button("cancel", this.width / 2 - 100, y, 88, 20, _button -> close()));
+        this.addDrawableChild(button("delete", this.width / 2 + 12, y, 88, 20, button -> {
             library.set.libraries.remove(library);
             library.set.save();
 
-            CreativeInventoryScreen screen = new CreativeInventoryScreen(client.player);
-            if ( ItemGroup.GROUPS.length % 9 == 3)
+            CreativeInventoryScreen screen = new CreativeInventoryScreen(client.player, this.client.player.networkHandler.getEnabledFeatures(), this.client.options.getOperatorItemsTab().getValue());
+            if ( ItemGroups.getGroups().size() % 9 == 3)
                 ((CreativeGuiExtensions) screen).fabric_previousPage();
             this.client.setScreen(screen);
         }));

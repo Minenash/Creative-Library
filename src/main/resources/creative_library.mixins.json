@@ -4,17 +4,14 @@
   "package": "com.minenash.creative_library.mixin",
   "compatibilityLevel": "JAVA_16",
   "client": [
-    "ItemGroupMixin",
-    "creative_screen.CreativeInventoryScreenMixin",
-    "creative_screen.CreativeInventoryScreenMixin_dev",
-    "creative_screen.CreativeInventoryScreenMixin_prod",
+    "CreativeInventoryScreenMixin",
     "server_identifiers.ConnectScreenMixin",
+    "server_identifiers.CreateWorldScreenMixin",
     "server_identifiers.LevelStorageMixin",
     "server_identifiers.RealmsMainScreenMixin",
     "server_identifiers.WorldListWidgetMixin",
-    "server_identifiers.CreateWorldScreenMixin"
+    "ItemGroup$EntriesImplMixin"
   ],
-  "plugin": "com.minenash.creative_library.mixin.creative_screen.CreativeInventoryScreenMixinPlugin",
   "injectors": {
     "defaultRequire": 1
   }

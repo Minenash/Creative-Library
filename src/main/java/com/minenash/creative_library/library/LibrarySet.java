@@ -1,12 +1,11 @@
 package com.minenash.creative_library.library;
 
-import com.minenash.creative_library.DynamicItemGroups;
 import com.minenash.creative_library.config.Config;
 import com.minenash.creative_library.config.Config.PrimaryLibrary;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.network.ServerAddress;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemGroups;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.NbtList;
 import net.minecraft.nbt.NbtIo;
@@ -63,8 +62,6 @@ public class LibrarySet {
                     this.libraries.add(Library.fromTag(libraries.getCompound(i), dataVersion, this));
             }
 
-            ((DynamicItemGroups) ItemGroup.BUILDING_BLOCKS).creativeLibrary$setItemGroupLibraries();
-
 
         } catch (IOException e) {
             LOGGER.error("Failed to load libraries", e);
@@ -94,7 +91,6 @@ public class LibrarySet {
 
         try {
             NbtIo.write(rootTag, file);
-            ((DynamicItemGroups) ItemGroup.BUILDING_BLOCKS).creativeLibrary$setItemGroupLibraries();
         } catch (IOException e) {
             LOGGER.error("Failed to save libraries", e);
         }
