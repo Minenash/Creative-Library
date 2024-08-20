@@ -1,3 +1,4 @@
 accessWidener	v1	named
 accessible	method	net/minecraft/item/ItemGroup <init> (Lnet/minecraft/item/ItemGroup$Row;ILnet/minecraft/item/ItemGroup$Type;Lnet/minecraft/text/Text;Ljava/util/function/Supplier;Lnet/minecraft/item/ItemGroup$EntryCollector;)V
 accessible	method	net/minecraft/item/ItemGroups collect ([Lnet/minecraft/item/ItemGroup;)Ljava/util/List;
+accessible field net/minecraft/client/gui/screen/ingame/CreativeInventoryScreen selectedTab Lnet/minecraft/item/ItemGroup;

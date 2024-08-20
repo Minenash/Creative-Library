@@ -20,15 +20,14 @@ public class LibraryItemGroup extends ItemGroup {
     }
 
     public LibraryItemGroup(Library library, boolean special) {
-
         super(null, -1, Type.CATEGORY, Text.literal(library.name),
-                () -> library.getItems().isEmpty() || library.getItems().get(0).getItem() == Items.AIR? new ItemStack(Items.BOOKSHELF) : library.getItems().get(0),
-                (enabledFeatures, entries, operatorEnabled) -> entries.addAll(library.getItems()));
+                () -> library.getItems().isEmpty() || library.getItems().get(0).getItem() == Items.AIR? new ItemStack(Items.BOOKSHELF) : library.getItems().get(0).copyWithCount(1),
+                (displayContext, entries) -> entries.addAll(library.getItems()));
 
         ((FabricItemGroup) this).setId(new Identifier("creative_library", library.name.toLowerCase().replaceAll("[^a-z0-9/._-]", "_")));
         this.library = library;
         this.special = special;
-        updateEntries(client.player.networkHandler.getEnabledFeatures(), client.options.getOperatorItemsTab().getValue());
+        updateEntries(new ItemGroup.DisplayContext(client.player.networkHandler.getEnabledFeatures(), client.options.getOperatorItemsTab().getValue(), client.world.getRegistryManager()));
     }
 
     @Override

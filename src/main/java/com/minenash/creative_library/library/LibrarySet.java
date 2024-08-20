@@ -79,7 +79,7 @@ public class LibrarySet {
             libraries.add(library.toTag());
 
         NbtCompound rootTag = new NbtCompound();
-        rootTag.putInt("DataVersion", SharedConstants.getGameVersion().getWorldVersion());
+        rootTag.putInt("DataVersion", SharedConstants.getGameVersion().getSaveVersion().getId());
         rootTag.put("libraries", libraries);
 
         if (primaryLibraryOverride != null) {

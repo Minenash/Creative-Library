@@ -44,8 +44,8 @@ public class ConfirmLibraryDeleteScreen extends Screen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
 
-        drawCenteredText(matrices, textRenderer, title, width / 2, 15, 16777215);
-        drawCenteredText(matrices, textRenderer, Text.translatable("creative_library.screen.confirm_delete.confirm_delete"), width / 2, 108, 16777215);
+        drawCenteredTextWithShadow(matrices, textRenderer, title, width / 2, 15, 16777215);
+        drawCenteredTextWithShadow(matrices, textRenderer, Text.translatable("creative_library.screen.confirm_delete.confirm_delete"), width / 2, 108, 16777215);
 
         super.render(matrices, mouseX, mouseY, delta);
     }

@@ -5,6 +5,7 @@ import com.minenash.creative_library.library.Library;
 import com.minenash.creative_library.library.LibraryItemGroup;
 import com.minenash.creative_library.library.LibrarySet;
 import net.fabricmc.fabric.mixin.itemgroup.ItemGroupsAccessor;
+import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
@@ -28,6 +29,12 @@ public class CLUtils {
     }
 
     public static void updateTabs() {
+        ItemGroup group = CreativeInventoryScreen.selectedTab;
+        Library lib = null;
+        if (group instanceof LibraryItemGroup lig) {
+            lib = lig.library;
+        }
+
         List<ItemGroup> original = ItemGroups.getGroups();
         List<ItemGroup> tabs = new ArrayList<>();
 
@@ -48,6 +55,9 @@ public class CLUtils {
 
         ItemGroupsAccessor.setGroups( ItemGroups.collect(tabs.toArray(new ItemGroup[0])) );
 
+        if (lib != null)
+            CreativeInventoryScreen.selectedTab = lib.group;
+
         System.out.println(ItemGroups.getGroups());
         System.out.println(ItemGroups.getGroupsToDisplay());
     }
@@ -56,14 +66,14 @@ public class CLUtils {
         System.out.println("START");
         for (Library library : LibrarySet.universal.libraries)
             if (!(Config.replaceHotBarWithPrimaryLibrary && library == LibrarySet.getMain())) {
-                tabs.add(new LibraryItemGroup(library));
+                tabs.add(library.withGroup(new LibraryItemGroup(library)));
                 System.out.println("U: " + library.name);
             }
 
         if (LibrarySet.server.loaded)
             for (Library library : LibrarySet.server.libraries)
                 if (!(Config.replaceHotBarWithPrimaryLibrary && library == LibrarySet.getMain())) {
-                    tabs.add(new LibraryItemGroup(library));
+                    tabs.add(library.withGroup(new LibraryItemGroup(library)));
                     System.out.println("S: " + library.name);
                 }
         System.out.println("END");

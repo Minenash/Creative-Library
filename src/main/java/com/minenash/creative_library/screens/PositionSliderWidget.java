@@ -39,11 +39,12 @@ public class PositionSliderWidget extends SliderWidget {
         return Text.literal( Integer.toString(position) );
     }
 
-    @Override
-    protected void renderBackground(MatrixStack matrices, MinecraftClient client, int mouseX, int mouseY) {
-        if (max != 0)
-            super.renderBackground(matrices, client, mouseX, mouseY);
-    }
+    //TODO: CHECK
+//    @Override
+//    protected void renderBackground(MatrixStack matrices, MinecraftClient client, int mouseX, int mouseY) {
+//        if (max != 0)
+//            super.renderBackground(matrices, client, mouseX, mouseY);
+//    }
 
     @Override
     public void onRelease(double mouseX, double mouseY) {

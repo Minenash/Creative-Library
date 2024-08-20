@@ -5,23 +5,31 @@ import com.minenash.creative_library.config.Config;
 import com.minenash.creative_library.library.LibraryItemGroup;
 import com.minenash.creative_library.library.LibrarySet;
 import com.minenash.creative_library.screens.CreativeInventoryScreenMixinCallback;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.fabricmc.fabric.impl.client.itemgroup.CreativeGuiExtensions;
 import net.fabricmc.fabric.impl.client.itemgroup.FabricCreativeGuiComponents;
 import net.fabricmc.fabric.impl.itemgroup.FabricItemGroup;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
+import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemGroups;
+import net.minecraft.screen.slot.Slot;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Iterator;
+import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
 @Mixin(CreativeInventoryScreen.class)
@@ -30,6 +38,14 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 	@Shadow private static ItemGroup selectedTab;
 	@Shadow private TextFieldWidget searchBox;
 	@Shadow private float scrollPosition;
+
+	@Shadow private @Nullable List<Slot> slots;
+
+	@Shadow @Final private static Identifier TEXTURE;
+
+	@Shadow protected abstract void renderTabIcon(MatrixStack matrices, ItemGroup group);
+
+	@Shadow protected abstract boolean hasScrollbar();
 
 	private CreativeInventoryScreenMixin(CreativeInventoryScreen.CreativeScreenHandler screenHandler, PlayerInventory playerInventory, Text text) {
 		super(screenHandler, playerInventory, text);
@@ -62,8 +78,13 @@ public abstract class CreativeInventoryScreenMixin extends AbstractInventoryScre
 			if (this.searchBox != null) {
 				this.searchBox.setVisible(false);
 				this.searchBox.setFocusUnlocked(true);
-				this.searchBox.setTextFieldFocused(false);
+				this.searchBox.setFocused(false);
 				this.searchBox.setText("");
+			}
+			if (slots != null) {
+				this.handler.slots.clear();
+				this.handler.slots.addAll(this.slots);
+				this.slots = null;
 			}
 			this.scrollPosition = 0.0f;
 			this.handler.scrollItems(0.0f);

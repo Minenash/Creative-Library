@@ -224,7 +224,7 @@ public class TinyConfig {
             }
 
             super.render(matrices, mouseX, mouseY, delta);
-            drawCenteredText(matrices, textRenderer, title, width/2, 15, 0xFFFFFF);
+            drawCenteredTextWithShadow(matrices, textRenderer, title, width/2, 15, 0xFFFFFF);
 
             int y = 40;
             for (EntryInfo info : entries) {

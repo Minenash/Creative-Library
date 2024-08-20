@@ -11,12 +11,14 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ingame.AbstractInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.CreativeInventoryListener;
+import net.minecraft.client.gui.screen.ingame.CreativeInventoryScreen;
 import net.minecraft.client.gui.screen.ingame.InventoryScreen;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.screen.slot.Slot;
@@ -27,6 +29,7 @@ import net.minecraft.text.TranslatableTextContent;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.MathHelper;
 import org.jetbrains.annotations.Nullable;
+import oshi.jna.platform.unix.CLibrary;
 
 import static com.minenash.creative_library.screens.LibraryButton.*;
 
@@ -101,7 +104,7 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
                 cursorItemIsAFAAAAAKE = !handler.getCursorStack().isEmpty();
             }
             else
-                slot.setStack(cursorStack.copy());
+                slot.setStack(cursorStack.copyWithCount(1));
         }
 
         else if (actionType == SlotActionType.CLONE) {
@@ -231,6 +234,8 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
 
     }
 
+
+
     @Environment(EnvType.CLIENT)
     public static class CreativeScreenHandler extends ScreenHandler {
         private static final List<ItemStack> FOUR_EMPTY_ROWS = Collections.nCopies(36, ItemStack.EMPTY);
@@ -331,8 +336,9 @@ public class LibraryContentScreen extends AbstractInventoryScreen<LibraryContent
             return player.getInventory().getStack(index);
         }
 
-        public void close(PlayerEntity player) {
-            super.close(player);
+
+        public void onClosed(PlayerEntity player) {
+            super.onClosed(player);
 
             while (itemList.size() > 0 && itemList.get(itemList.size()-1).isEmpty())
                 itemList.remove(itemList.size()-1);

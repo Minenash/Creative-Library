@@ -133,12 +133,12 @@ public class EditLibraryScreen extends Screen {
 
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
-        drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 15, 16777215);
+        drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 15, 16777215);
         drawTextWithShadow(matrices, this.textRenderer, Text.translatable("creative_library.screen.options.name_field"), this.width / 2 - 100, 34, 10526880);
 
         drawTextWithShadow(matrices, textRenderer, Text.translatable("creative_library.screen.options.tie_to_server", CreativeLibrary.serverTerm()), width / 2 - 100, 83, 16777215);
         drawTextWithShadow(matrices, textRenderer, Text.translatable("creative_library.screen.options.position"), width / 2 - 100, 108, 16777215);
-        drawCenteredText(matrices, textRenderer, Text.translatable("creative_library.screen.options.sever_settings", CreativeLibrary.serverTerm()), width / 2, 133, 16777215);
+        drawCenteredTextWithShadow(matrices, textRenderer, Text.translatable("creative_library.screen.options.sever_settings", CreativeLibrary.serverTerm()), width / 2, 133, 16777215);
         drawTextWithShadow(matrices, textRenderer, Text.translatable("creative_library.screen.options.primary_library_tab.line_1"), width / 2 - 100, 158, 16777215);
         drawTextWithShadow(matrices, textRenderer, Text.translatable("creative_library.screen.options.primary_library_tab.line_2"), width / 2 - 100, 168, 16777215);
 
